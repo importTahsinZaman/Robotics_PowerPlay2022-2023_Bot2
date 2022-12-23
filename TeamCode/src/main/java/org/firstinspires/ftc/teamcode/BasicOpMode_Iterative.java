@@ -27,12 +27,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.robotcontroller.external.samples;
+package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -51,42 +53,171 @@ import com.qualcomm.robotcore.util.Range;
  */
 
 @TeleOp(name="Basic: Iterative OpMode", group="Iterative Opmode")
-@Disabled
 public class BasicOpMode_Iterative extends OpMode
 {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor leftDrive = null;
-    private DcMotor rightDrive = null;
+    private DcMotor armRightMotor = null;
+    private DcMotor armLeftMotor = null;
+    private Servo leftFinger = null;
+    private Servo rightFinger = null;
+    private DcMotor motorFrontLeft = null;
+    private DcMotor motorBackLeft = null;
+    private DcMotor motorFrontRight = null;
+    private DcMotor motorBackRight = null;
 
-    /*
-     * Code to run ONCE when the driver hits INIT
-     */
     @Override
     public void init() {
         telemetry.addData("Status", "Initialized");
+        telemetry.update();
 
-        // Initialize the hardware variables. Note that the strings used here as parameters
-        // to 'get' must correspond to the names assigned during the robot configuration
-        // step (using the FTC Robot Controller app on the phone).
-        leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
-        rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
+        armRightMotor = hardwareMap.get(DcMotor.class, "armRight");
+        armLeftMotor = hardwareMap.get(DcMotor.class, "armLeft");
 
-        // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
-        // Pushing the left stick forward MUST make robot go forward. So adjust these two lines based on your first test drive.
-        // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
-        leftDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightDrive.setDirection(DcMotor.Direction.FORWARD);
+        armRightMotor.setDirection(DcMotor.Direction.FORWARD);
+        armLeftMotor.setDirection(DcMotor.Direction.REVERSE);
 
-        // Tell the driver that initialization is complete.
+        armRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        armLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        motorFrontLeft = hardwareMap.get(DcMotor.class, "motorFrontLeft");
+        motorBackLeft = hardwareMap.get(DcMotor.class, "motorBackLeft");
+        motorFrontRight = hardwareMap.get(DcMotor.class, "motorFrontRight");
+        motorBackRight = hardwareMap.get(DcMotor.class, "motorBackRight");
+
+        // Reverse the right side motors
+        // Reverse left motors if you are using NeveRests
+        motorFrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        motorBackRight.setDirection(DcMotorSimple.Direction.REVERSE);
+
+
+
+        leftFinger = hardwareMap.get(Servo.class, "left_finger");
+        rightFinger = hardwareMap.get(Servo.class, "right_finger");
+
+        leftFinger.setDirection(Servo.Direction.REVERSE);
+
+
+        leftFinger.setPosition(0);
+        rightFinger.setPosition(0);
+
+        autonomous();
+
+        runtime.reset();
+
         telemetry.addData("Status", "Initialized");
     }
+    public void cSleep (int time){
+        try {
+            Thread.sleep(time);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void stopMovement() {
+        motorFrontLeft.setPower(0);
+        motorFrontRight.setPower(0);
+        motorBackLeft.setPower(0);
+        motorBackRight.setPower(0);
+    }
+
+    public void moveForward(double speed){
+        motorFrontLeft.setPower(speed);
+        motorFrontRight.setPower(speed);
+        motorBackLeft.setPower(speed);
+        motorBackRight.setPower(speed);
+    }
+
+    public void moveBackward(double speed){
+        motorFrontLeft.setPower(-speed);
+        motorFrontRight.setPower(-speed);
+        motorBackLeft.setPower(-speed);
+        motorBackRight.setPower(-speed);
+    }
+
+    public void moveRight(double speed){
+        motorFrontLeft.setPower(speed);
+        motorFrontRight.setPower(-speed);
+        motorBackLeft.setPower(-speed);
+        motorBackRight.setPower(speed);
+    }
+
+    public void moveLeft(double speed){
+        motorFrontLeft.setPower(-speed);
+        motorFrontRight.setPower(speed);
+        motorBackLeft.setPower(speed);
+        motorBackRight.setPower(-speed);
+    }
+
+    public void raiseArm(double power){
+        armRightMotor.setDirection(DcMotor.Direction.FORWARD);
+        armLeftMotor.setDirection(DcMotor.Direction.REVERSE);
+
+        if(armRightMotor.getCurrentPosition()>=155){
+            armRightMotor.setPower(0.3);
+            armLeftMotor.setPower(0.3);
+        }else{
+            armRightMotor.setPower(power);
+            armLeftMotor.setPower(power);
+        }
+    }
+
+    public void dropArm(){
+        armRightMotor.setDirection(DcMotor.Direction.REVERSE);
+        armLeftMotor.setDirection(DcMotor.Direction.FORWARD);
+        armRightMotor.setPower(0.5);
+        armLeftMotor.setPower(0.5);
+    }
+
+    public void restArm(){
+        armRightMotor.setPower(0);
+        armLeftMotor.setPower(0);
+    }
+
+    public void openClaw(){
+        leftFinger.setPosition(0.162);
+        rightFinger.setPosition(0.162);
+    }
+
+    public void closeClaw(){
+        leftFinger.setPosition(0);
+        rightFinger.setPosition(0);
+    }
+
+    public void forwardScore() {
+        closeClaw();
+        raiseArm(.8);
+        cSleep(1650);
+        moveForward(.5);
+        cSleep(600);
+        stopMovement();
+    }
+
+    public void returnDock(){
+        dropArm();
+        cSleep(300);
+        restArm();
+        openClaw();
+        moveBackward(.5);
+        cSleep(600);
+        stopMovement();
+    }
+
+    public void autonomous(){
+        closeClaw();
+    moveForward(.5);
+    cSleep(1300);
+    stopMovement();
+    raiseArm(.8);
+}
 
     /*
      * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
      */
     @Override
     public void init_loop() {
+
     }
 
     /*
@@ -94,6 +225,7 @@ public class BasicOpMode_Iterative extends OpMode
      */
     @Override
     public void start() {
+        closeClaw();
         runtime.reset();
     }
 
@@ -102,32 +234,56 @@ public class BasicOpMode_Iterative extends OpMode
      */
     @Override
     public void loop() {
-        // Setup a variable for each drive wheel to save power level for telemetry
-        double leftPower;
-        double rightPower;
 
-        // Choose to drive using either Tank Mode, or POV Mode
-        // Comment out the method that's not used.  The default below is POV.
+        if (gamepad1.b){
+            openClaw();
+        }else if (gamepad1.x){
+            closeClaw();
+        }
 
-        // POV Mode uses left stick to go forward, and right stick to turn.
-        // - This uses basic math to combine motions and is easier to drive straight.
-        double drive = -gamepad1.left_stick_y;
-        double turn  =  gamepad1.right_stick_x;
-        leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
-        rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
+        if (gamepad1.y){
+            raiseArm(1);
+        }
+        else if(gamepad1.a){
+            dropArm();
+        }
+        else{
+            restArm();
+        }
 
-        // Tank Mode uses one stick to control each wheel.
-        // - This requires no math, but it is hard to drive forward slowly and keep straight.
-        // leftPower  = -gamepad1.left_stick_y ;
-        // rightPower = -gamepad1.right_stick_y ;
+        while (armRightMotor.isBusy()){
+            telemetry.addData("Status", "Running Arm");
+            telemetry.update();
+        }
 
-        // Send calculated power to wheels
-        leftDrive.setPower(leftPower);
-        rightDrive.setPower(rightPower);
+        if (gamepad1.dpad_up){
+            forwardScore();
+        }else if (gamepad1.dpad_down){
+            returnDock();
+        }
 
-        // Show the elapsed game time and wheel power.
-        telemetry.addData("Status", "Run Time: " + runtime.toString());
-        telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
+
+        double y = -gamepad1.left_stick_y; // This is reversed.
+        double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
+        double rx = gamepad1.right_stick_x;
+
+        // Denominator is the largest motor power (absolute value) or 1
+        // This ensures all the powers maintain the same ratio, but only when
+        // at least one is out of the range [-1, 1]
+        double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
+        double frontLeftPower = (y + x + rx) / denominator;
+        double backLeftPower = (y - x + rx) / denominator;
+        double frontRightPower = (y - x - rx) / denominator;
+        double backRightPower = (y + x - rx) / denominator;
+
+        motorFrontLeft.setPower(frontLeftPower*.7);
+        motorBackLeft.setPower(backLeftPower*.7);
+        motorFrontRight.setPower(frontRightPower*.7);
+        motorBackRight.setPower(backRightPower*.7);
+
+        telemetry.addData("Arm Pos:", armRightMotor.getCurrentPosition());
+
+        telemetry.update();
     }
 
     /*
