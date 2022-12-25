@@ -29,14 +29,15 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
 /**
  * This file contains an example of an iterative (Non-Linear) "OpMode".
@@ -55,162 +56,52 @@ import com.qualcomm.robotcore.util.Range;
 @TeleOp(name="Basic: Iterative OpMode", group="Iterative Opmode")
 public class BasicOpMode_Iterative extends OpMode
 {
-    // Declare OpMode members.
+    private Robot robot = new Robot();
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor armRightMotor = null;
-    private DcMotor armLeftMotor = null;
-    private Servo leftFinger = null;
-    private Servo rightFinger = null;
-    private DcMotor motorFrontLeft = null;
-    private DcMotor motorBackLeft = null;
-    private DcMotor motorFrontRight = null;
-    private DcMotor motorBackRight = null;
+    private Gyro gyro;
+    private double initialAngle = 0;
 
     @Override
     public void init() {
-        telemetry.addData("Status", "Initialized");
-        telemetry.update();
-
-        armRightMotor = hardwareMap.get(DcMotor.class, "armRight");
-        armLeftMotor = hardwareMap.get(DcMotor.class, "armLeft");
-
-        armRightMotor.setDirection(DcMotor.Direction.FORWARD);
-        armLeftMotor.setDirection(DcMotor.Direction.REVERSE);
-
-        armRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        armLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        motorFrontLeft = hardwareMap.get(DcMotor.class, "motorFrontLeft");
-        motorBackLeft = hardwareMap.get(DcMotor.class, "motorBackLeft");
-        motorFrontRight = hardwareMap.get(DcMotor.class, "motorFrontRight");
-        motorBackRight = hardwareMap.get(DcMotor.class, "motorBackRight");
-
-        // Reverse the right side motors
-        // Reverse left motors if you are using NeveRests
-        motorFrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        motorBackRight.setDirection(DcMotorSimple.Direction.REVERSE);
-
-
-
-        leftFinger = hardwareMap.get(Servo.class, "left_finger");
-        rightFinger = hardwareMap.get(Servo.class, "right_finger");
-
-        leftFinger.setDirection(Servo.Direction.REVERSE);
-
-
-        leftFinger.setPosition(0);
-        rightFinger.setPosition(0);
-
-        autonomous();
+        robot.init(hardwareMap);
+        gyro  = new Gyro(robot);
+        initialAngle = robot.imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
 
         runtime.reset();
 
         telemetry.addData("Status", "Initialized");
-    }
-    public void cSleep (int time){
-        try {
-            Thread.sleep(time);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void stopMovement() {
-        motorFrontLeft.setPower(0);
-        motorFrontRight.setPower(0);
-        motorBackLeft.setPower(0);
-        motorBackRight.setPower(0);
-    }
-
-    public void moveForward(double speed){
-        motorFrontLeft.setPower(speed);
-        motorFrontRight.setPower(speed);
-        motorBackLeft.setPower(speed);
-        motorBackRight.setPower(speed);
-    }
-
-    public void moveBackward(double speed){
-        motorFrontLeft.setPower(-speed);
-        motorFrontRight.setPower(-speed);
-        motorBackLeft.setPower(-speed);
-        motorBackRight.setPower(-speed);
-    }
-
-    public void moveRight(double speed){
-        motorFrontLeft.setPower(speed);
-        motorFrontRight.setPower(-speed);
-        motorBackLeft.setPower(-speed);
-        motorBackRight.setPower(speed);
-    }
-
-    public void moveLeft(double speed){
-        motorFrontLeft.setPower(-speed);
-        motorFrontRight.setPower(speed);
-        motorBackLeft.setPower(speed);
-        motorBackRight.setPower(-speed);
+        telemetry.update();
     }
 
     public void raiseArm(double power){
-        armRightMotor.setDirection(DcMotor.Direction.FORWARD);
-        armLeftMotor.setDirection(DcMotor.Direction.REVERSE);
-
-        if(armRightMotor.getCurrentPosition()>=155){
-            armRightMotor.setPower(0.3);
-            armLeftMotor.setPower(0.3);
+        if(robot.armRightMotor.getCurrentPosition()>=155){
+            robot.armRightMotor.setPower(0.3);
+            robot.armLeftMotor.setPower(-0.3);
         }else{
-            armRightMotor.setPower(power);
-            armLeftMotor.setPower(power);
+            robot.armRightMotor.setPower(power);
+            robot.armLeftMotor.setPower(-power);
         }
     }
 
     public void dropArm(){
-        armRightMotor.setDirection(DcMotor.Direction.REVERSE);
-        armLeftMotor.setDirection(DcMotor.Direction.FORWARD);
-        armRightMotor.setPower(0.5);
-        armLeftMotor.setPower(0.5);
+        robot.armRightMotor.setPower(-0.5);
+        robot.armLeftMotor.setPower(0.5);
     }
 
     public void restArm(){
-        armRightMotor.setPower(0);
-        armLeftMotor.setPower(0);
+        robot.armRightMotor.setPower(0);
+        robot.armLeftMotor.setPower(0);
     }
 
     public void openClaw(){
-        leftFinger.setPosition(0.162);
-        rightFinger.setPosition(0.162);
+        robot.leftFinger.setPosition(0.162);
+        robot.rightFinger.setPosition(0.162);
     }
 
     public void closeClaw(){
-        leftFinger.setPosition(0);
-        rightFinger.setPosition(0);
+        robot.leftFinger.setPosition(0);
+        robot.rightFinger.setPosition(0);
     }
-
-    public void forwardScore() {
-        closeClaw();
-        raiseArm(.8);
-        cSleep(1650);
-        moveForward(.5);
-        cSleep(600);
-        stopMovement();
-    }
-
-    public void returnDock(){
-        dropArm();
-        cSleep(300);
-        restArm();
-        openClaw();
-        moveBackward(.5);
-        cSleep(600);
-        stopMovement();
-    }
-
-    public void autonomous(){
-        closeClaw();
-    moveForward(.5);
-    cSleep(1300);
-    stopMovement();
-    raiseArm(.8);
-}
 
     /*
      * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
@@ -241,29 +132,25 @@ public class BasicOpMode_Iterative extends OpMode
             closeClaw();
         }
 
-        if (gamepad1.y){
+        if(gamepad1.y){
             raiseArm(1);
-        }
-        else if(gamepad1.a){
+        }else if (gamepad1.a){
             dropArm();
-        }
-        else{
+        }else{
             restArm();
         }
 
-        while (armRightMotor.isBusy()){
-            telemetry.addData("Status", "Running Arm");
-            telemetry.update();
-        }
-
-        if (gamepad1.dpad_up){
-            forwardScore();
+        if(gamepad1.dpad_left){
+            gyro.turnToPID(initialAngle+90);
+        }else if (gamepad1.dpad_right){
+            gyro.turnToPID(initialAngle-90);
+        }else if (gamepad1.dpad_up){
+            gyro.turnToPID(initialAngle);
         }else if (gamepad1.dpad_down){
-            returnDock();
+            gyro.turnToPID(initialAngle+180);
         }
 
-
-        double y = -gamepad1.left_stick_y; // This is reversed.
+        double y = -gamepad1.left_stick_y; // Remember, this is reversed!
         double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
         double rx = gamepad1.right_stick_x;
 
@@ -276,13 +163,15 @@ public class BasicOpMode_Iterative extends OpMode
         double frontRightPower = (y - x - rx) / denominator;
         double backRightPower = (y + x - rx) / denominator;
 
-        motorFrontLeft.setPower(frontLeftPower*.7);
-        motorBackLeft.setPower(backLeftPower*.7);
-        motorFrontRight.setPower(frontRightPower*.7);
-        motorBackRight.setPower(backRightPower*.7);
+        robot.motorFrontLeft.setPower(frontLeftPower*.7);
+        robot.motorBackLeft.setPower(backLeftPower*.7);
+        robot.motorFrontRight.setPower(frontRightPower*.7);
+        robot.motorBackRight.setPower(backRightPower*.7);
 
-        telemetry.addData("Arm Pos:", armRightMotor.getCurrentPosition());
 
+        telemetry.addData("x: ", robot.imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).firstAngle);
+        telemetry.addData("y: ", robot.imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).secondAngle);
+        telemetry.addData("z: ", robot.imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle);
         telemetry.update();
     }
 

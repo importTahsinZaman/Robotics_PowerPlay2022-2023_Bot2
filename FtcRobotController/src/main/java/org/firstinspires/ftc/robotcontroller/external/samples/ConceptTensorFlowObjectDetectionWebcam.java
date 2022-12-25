@@ -60,7 +60,7 @@ public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
      * has been downloaded to the Robot Controller's SD FLASH memory, it must to be loaded using loadModelFromFile()
      * Here we assume it's an Asset.    Also see method initTfod() below .
      */
-    private static final String TFOD_MODEL_ASSET = "model.tflite";
+    private static final String TFOD_MODEL_ASSET = "PowerPlay.tflite";
     // private static final String TFOD_MODEL_FILE  = "/sdcard/FIRST/tflitemodels/CustomTeamModel.tflite";
 
 
@@ -83,7 +83,7 @@ public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
      * and paste it in to your code on the next line, between the double quotes.
      */
     private static final String VUFORIA_KEY =
-            "AUG+1s//////AAABmdFcHU3BxUsunbx+HAeOx6mGM9bqHgCBZIFB1uAoJFvX9T2Zkl0F+xEqmDV1lNJatwtftsVgcIDvL13/iNGhzfxfvqxsQ5Z4rqDMi3QXqU1RVM8SPdApGnEmhswy7vSKEztTg6nHMi6dFTlpQgfUWP/JCp3rIz+cgVjnb1YAa+zf2AT7TxMSq9mYmOYnRWa7OpS/9qDdzTTfNUPPACw+smeJ7F2iYXZVyHByBFCPFNNN0rGzLyAuPzi065c/v7DukD7xCAIG2/aSNusKxaAW2hFFx6XF8tG5hWsQKRRFq5+YUJqkYWBlmGDgFcgriuVMUT0qZFqKDJ6cg3HLpq6AM/6tSbfQgwhBNsPk2NUBl8cr";
+            " -- YOUR NEW VUFORIA KEY GOES HERE  --- ";
 
     /**
      * {@link #vuforia} is the variable we will use to store our instance of the Vuforia
