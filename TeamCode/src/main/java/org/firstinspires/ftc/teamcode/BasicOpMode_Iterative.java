@@ -65,6 +65,7 @@ public class BasicOpMode_Iterative extends OpMode
     public void init() {
         robot.init(hardwareMap);
         gyro  = new Gyro(robot);
+        gyro.resetAngle();
         initialAngle = robot.imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
 
         runtime.reset();
