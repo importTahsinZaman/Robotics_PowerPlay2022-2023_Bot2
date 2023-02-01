@@ -28,7 +28,7 @@ public class Robot {
     public DcMotor motorFrontRight = null;
     public DcMotor motorBackRight = null;
 
-    BHI260IMU imu;
+    public BHI260IMU imu;
     IMU.Parameters IMUParameters;
 
     public void init(HardwareMap ahwmap){

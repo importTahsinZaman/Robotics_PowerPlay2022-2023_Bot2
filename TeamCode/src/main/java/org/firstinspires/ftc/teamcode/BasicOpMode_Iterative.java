@@ -128,8 +128,10 @@ public class BasicOpMode_Iterative extends OpMode
     public void loop() {
 
         if (gamepad1.b){
+            telemetry.addData("Claw Open Button Pressed", "True");
             openClaw();
         }else if (gamepad1.x){
+            telemetry.addData("Claw Close Button Pressed", "True");
             closeClaw();
         }
 
@@ -150,6 +152,16 @@ public class BasicOpMode_Iterative extends OpMode
         }else if (gamepad1.dpad_down){
             gyro.turnToPID(initialAngle+180);
         }
+
+//        if(gamepad1.right_bumper){
+////            robot.motorBackRight.setPower(.5);
+//            robot.motorFrontRight.setPower(.5);
+//        }else if (gamepad1.left_bumper){
+//            robot.motorFrontLeft.setPower(.5);
+////            robot.motorBackLeft.setPower(.5);
+//        }else{
+//            robot.setAllDrivePower(0);
+//        }
 
         double y = -gamepad1.left_stick_y; // Remember, this is reversed!
         double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
@@ -173,6 +185,7 @@ public class BasicOpMode_Iterative extends OpMode
         telemetry.addData("x: ", robot.imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).firstAngle);
         telemetry.addData("y: ", robot.imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).secondAngle);
         telemetry.addData("z: ", robot.imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle);
+        telemetry.addData("Arm Pos: ",robot.armRightMotor.getCurrentPosition());
         telemetry.update();
     }
 
