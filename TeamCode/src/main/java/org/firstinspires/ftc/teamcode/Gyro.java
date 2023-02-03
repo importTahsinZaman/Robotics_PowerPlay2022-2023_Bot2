@@ -93,7 +93,7 @@ public class Gyro{
     }
 
     public void turnToPID(double targetAngle) {
-        TurnPIDController pid = new TurnPIDController(targetAngle, 0.01, 0, 0.0019);
+        TurnPIDController pid = new TurnPIDController(targetAngle, 0.01, 0, 0.0022);
         // Checking lastSlope to make sure that it's not oscillating when it quits
         while (Math.abs(targetAngle - getAbsoluteAngle()) > 0.5 || pid.getLastSlope() > 0.75) {
             double motorPower = pid.update(getAbsoluteAngle());
@@ -101,4 +101,5 @@ public class Gyro{
         }
         robot.setAllDrivePower(0);
     }
+
 }

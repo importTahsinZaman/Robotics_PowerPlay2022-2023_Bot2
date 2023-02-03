@@ -29,6 +29,8 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import android.graphics.Color;
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -38,6 +40,9 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
+import java.util.Locale;
 
 /**
  * This file contains an example of an iterative (Non-Linear) "OpMode".
@@ -60,6 +65,14 @@ public class BasicOpMode_Iterative extends OpMode
     private ElapsedTime runtime = new ElapsedTime();
     private Gyro gyro;
     private double initialAngle = 0;
+
+    float[] hsvValues = {0f, 0f, 0f};
+    final float[] values = hsvValues;
+    final double SCALE_FACTOR = 255;
+
+    public double clawOpenTime = 0;
+
+    private double dPadMovementSpeed = 0.1;
 
     @Override
     public void init() {
@@ -126,12 +139,20 @@ public class BasicOpMode_Iterative extends OpMode
      */
     @Override
     public void loop() {
+        boolean clawDetected = false;
 
-        if (gamepad1.b){
-            telemetry.addData("Claw Open Button Pressed", "True");
+        Color.RGBToHSV((int)(robot.sensorColor.red() * SCALE_FACTOR),
+                    (int) (robot.sensorColor.green() * SCALE_FACTOR),
+                    (int) (robot.sensorColor.blue() * SCALE_FACTOR),
+                    hsvValues);
+
+        if (gamepad1.b || (robot.sensorDistance.getDistance(DistanceUnit.CM) < 0.639)&& (robot.sensorColor.red() > robot.sensorColor.blue())
+                && (robot.sensorColor.green() > robot.sensorColor.blue()) && (robot.sensorColor.green() > robot.sensorColor.red())){
+            clawOpenTime = runtime.time();
             openClaw();
-        }else if (gamepad1.x){
-            telemetry.addData("Claw Close Button Pressed", "True");
+
+        }else if (gamepad1.x || (robot.sensorDistance2.getDistance(DistanceUnit.CM) < 5 && runtime.time() >= clawOpenTime + .75)){
+            clawDetected = true;
             closeClaw();
         }
 
@@ -143,25 +164,17 @@ public class BasicOpMode_Iterative extends OpMode
             restArm();
         }
 
-        if(gamepad1.dpad_left){
-            gyro.turnToPID(initialAngle+90);
-        }else if (gamepad1.dpad_right){
-            gyro.turnToPID(initialAngle-90);
-        }else if (gamepad1.dpad_up){
-            gyro.turnToPID(initialAngle);
-        }else if (gamepad1.dpad_down){
-            gyro.turnToPID(initialAngle+180);
-        }
-
-//        if(gamepad1.right_bumper){
-////            robot.motorBackRight.setPower(.5);
-//            robot.motorFrontRight.setPower(.5);
-//        }else if (gamepad1.left_bumper){
-//            robot.motorFrontLeft.setPower(.5);
-////            robot.motorBackLeft.setPower(.5);
-//        }else{
-//            robot.setAllDrivePower(0);
+//        if(gamepad1.dpad_left){
+//            gyro.turnToPID(initialAngle+90);
+//        }else if (gamepad1.dpad_right){
+//            gyro.turnToPID(initialAngle-90);
+//        }else if (gamepad1.dpad_up){
+//            gyro.turnToPID(initialAngle);
+//        }else if (gamepad1.dpad_down){
+//            gyro.turnToPID(initialAngle+180);
 //        }
+
+        //Movement code starts here
 
         double y = -gamepad1.left_stick_y; // Remember, this is reversed!
         double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
@@ -176,16 +189,39 @@ public class BasicOpMode_Iterative extends OpMode
         double frontRightPower = (y - x - rx) / denominator;
         double backRightPower = (y + x - rx) / denominator;
 
-        robot.motorFrontLeft.setPower(frontLeftPower*.7);
-        robot.motorBackLeft.setPower(backLeftPower*.7);
-        robot.motorFrontRight.setPower(frontRightPower*.7);
-        robot.motorBackRight.setPower(backRightPower*.7);
+        if (!clawDetected) {
+            if (gamepad1.dpad_left) {
+                robot.setDrivePower(dPadMovementSpeed, -dPadMovementSpeed, dPadMovementSpeed, -dPadMovementSpeed);
+            } else if (gamepad1.dpad_right) {
+                robot.setDrivePower(-dPadMovementSpeed, dPadMovementSpeed, -dPadMovementSpeed, dPadMovementSpeed);
+            } else if (gamepad1.dpad_up) {
+                robot.setAllDrivePower(dPadMovementSpeed);
+            } else if (gamepad1.dpad_down) {
+                robot.setAllDrivePower(-dPadMovementSpeed);
+            } else {
+                robot.motorFrontLeft.setPower(frontLeftPower * .7);
+                robot.motorBackLeft.setPower(backLeftPower * .7);
+                robot.motorFrontRight.setPower(frontRightPower * .7);
+                robot.motorBackRight.setPower(backRightPower * .7);
+            }
+        }else if (frontLeftPower == 0 && frontRightPower ==0 && backRightPower ==0 && backLeftPower ==0){
+            robot.setAllDrivePower(0);
+        }
 
+        //Movement code ends here
 
         telemetry.addData("x: ", robot.imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).firstAngle);
         telemetry.addData("y: ", robot.imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).secondAngle);
         telemetry.addData("z: ", robot.imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle);
         telemetry.addData("Arm Pos: ",robot.armRightMotor.getCurrentPosition());
+        telemetry.addData("Distance(cm): ", String.format(Locale.US, "%.02f", robot.sensorDistance.getDistance(DistanceUnit.CM)));
+        telemetry.addData("Alpha: ", robot.sensorColor.alpha());
+        telemetry.addData("Red: ", robot.sensorColor.red());
+        telemetry.addData("Green: ", robot.sensorColor.green());
+        telemetry.addData("Blue: ", robot.sensorColor.blue());
+        telemetry.addData("Hue: ", hsvValues[0]);
+        telemetry.addData("Distance(cm) Sensor 2: ", String.format(Locale.US, "%.02f", robot.sensorDistance2.getDistance(DistanceUnit.CM)));
+        telemetry.addData("RunTime:", runtime.time());
         telemetry.update();
     }
 

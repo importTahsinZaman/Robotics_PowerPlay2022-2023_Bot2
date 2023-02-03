@@ -2,8 +2,10 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BHI260IMU;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -27,12 +29,24 @@ public class Robot {
     public DcMotor motorBackLeft = null;
     public DcMotor motorFrontRight = null;
     public DcMotor motorBackRight = null;
+    public ColorSensor sensorColor = null;
+    public DistanceSensor sensorDistance = null;
+    public ColorSensor sensorColor2 = null;
+    public DistanceSensor sensorDistance2 = null;
 
     public BHI260IMU imu;
     IMU.Parameters IMUParameters;
 
     public void init(HardwareMap ahwmap){
         hwMap = ahwmap;
+
+        //Get color sensor 1
+        sensorColor = hwMap.get(ColorSensor.class, "color");
+        sensorDistance = hwMap.get(DistanceSensor.class, "color");
+
+        //Get color sensor 2
+        sensorColor2 = hwMap.get(ColorSensor.class, "color2");
+        sensorDistance2 = hwMap.get(DistanceSensor.class, "color2");
 
         //  Get all drive motors
         motorFrontLeft = hwMap.get(DcMotor.class, "motorFrontLeft");
