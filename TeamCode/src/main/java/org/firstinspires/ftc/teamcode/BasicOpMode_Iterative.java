@@ -74,6 +74,9 @@ public class BasicOpMode_Iterative extends OpMode
 
     private double dPadMovementSpeed = 0.1;
 
+    int blueReading = 0;
+    int redReading = 0;
+
     @Override
     public void init() {
         robot.init(hardwareMap);
@@ -140,6 +143,8 @@ public class BasicOpMode_Iterative extends OpMode
     @Override
     public void loop() {
         boolean clawDetected = false;
+        double speedMultiplier = 0.4;
+
 
         Color.RGBToHSV((int)(robot.sensorColor.red() * SCALE_FACTOR),
                     (int) (robot.sensorColor.green() * SCALE_FACTOR),
@@ -151,7 +156,8 @@ public class BasicOpMode_Iterative extends OpMode
             clawOpenTime = runtime.time();
             openClaw();
 
-        }else if (gamepad1.x || (robot.sensorDistance2.getDistance(DistanceUnit.CM) < 5 && runtime.time() >= clawOpenTime + .75)){
+        }else if (gamepad1.x || (robot.sensorDistance2.getDistance(DistanceUnit.CM) < 5.07 && runtime.time() >= clawOpenTime + .75 &&
+                 gamepad1.right_trigger>0)){
             clawDetected = true;
             closeClaw();
         }
@@ -173,6 +179,10 @@ public class BasicOpMode_Iterative extends OpMode
 //        }else if (gamepad1.dpad_down){
 //            gyro.turnToPID(initialAngle+180);
 //        }
+
+        if (gamepad1.left_trigger > 0){
+            speedMultiplier = 1;
+        }
 
         //Movement code starts here
 
@@ -199,14 +209,17 @@ public class BasicOpMode_Iterative extends OpMode
             } else if (gamepad1.dpad_down) {
                 robot.setAllDrivePower(-dPadMovementSpeed);
             } else {
-                robot.motorFrontLeft.setPower(frontLeftPower * .7);
-                robot.motorBackLeft.setPower(backLeftPower * .7);
-                robot.motorFrontRight.setPower(frontRightPower * .7);
-                robot.motorBackRight.setPower(backRightPower * .7);
+                robot.motorFrontLeft.setPower(frontLeftPower * speedMultiplier);
+                robot.motorBackLeft.setPower(backLeftPower * speedMultiplier);
+                robot.motorFrontRight.setPower(frontRightPower * speedMultiplier);
+                robot.motorBackRight.setPower(backRightPower * speedMultiplier);
             }
         }else if (frontLeftPower == 0 && frontRightPower ==0 && backRightPower ==0 && backLeftPower ==0){
             robot.setAllDrivePower(0);
         }
+
+        blueReading = robot.sensorColor2.blue();
+        redReading = robot.sensorColor2.red();
 
         //Movement code ends here
 
@@ -221,6 +234,9 @@ public class BasicOpMode_Iterative extends OpMode
         telemetry.addData("Blue: ", robot.sensorColor.blue());
         telemetry.addData("Hue: ", hsvValues[0]);
         telemetry.addData("Distance(cm) Sensor 2: ", String.format(Locale.US, "%.02f", robot.sensorDistance2.getDistance(DistanceUnit.CM)));
+        telemetry.addData("Red2: ", robot.sensorColor2.red());
+        telemetry.addData("Green2: ", robot.sensorColor2.green());
+        telemetry.addData("Blue2: ", robot.sensorColor2.blue());
         telemetry.addData("RunTime:", runtime.time());
         telemetry.update();
     }

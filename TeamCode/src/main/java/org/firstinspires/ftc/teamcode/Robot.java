@@ -99,8 +99,8 @@ public class Robot {
         leftFinger.setDirection(Servo.Direction.REVERSE);
 
         //Reset Left/Right finger positions
-        leftFinger.setPosition(0);
-        rightFinger.setPosition(0);
+//        leftFinger.setPosition(0);
+//        rightFinger.setPosition(0);
 
         IMUParameters = new IMU.Parameters(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.UP, RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
 
