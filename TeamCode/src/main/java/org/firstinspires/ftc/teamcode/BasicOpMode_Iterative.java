@@ -191,9 +191,9 @@ public class BasicOpMode_Iterative extends OpMode
 
         if (!clawDetected) {
             if (gamepad1.dpad_left) {
-                robot.setDrivePower(dPadMovementSpeed, -dPadMovementSpeed, dPadMovementSpeed, -dPadMovementSpeed);
+                robot.setDrivePower(-dPadMovementSpeed, dPadMovementSpeed, dPadMovementSpeed, -dPadMovementSpeed);
             } else if (gamepad1.dpad_right) {
-                robot.setDrivePower(-dPadMovementSpeed, dPadMovementSpeed, -dPadMovementSpeed, dPadMovementSpeed);
+                robot.setDrivePower(dPadMovementSpeed, -dPadMovementSpeed, -dPadMovementSpeed, dPadMovementSpeed);
             } else if (gamepad1.dpad_up) {
                 robot.setAllDrivePower(dPadMovementSpeed);
             } else if (gamepad1.dpad_down) {
