@@ -22,17 +22,17 @@ public class Robot {
     public ElapsedTime period = new ElapsedTime();
 
     public DcMotor armRightMotor = null;
-    public DcMotor armLeftMotor = null;
+//    public DcMotor armLeftMotor = null;
     public Servo leftFinger = null;
     public Servo rightFinger = null;
     public DcMotor motorFrontLeft = null;
     public DcMotor motorBackLeft = null;
     public DcMotor motorFrontRight = null;
     public DcMotor motorBackRight = null;
-    public ColorSensor sensorColor = null;
-    public DistanceSensor sensorDistance = null;
-    public ColorSensor sensorColor2 = null;
-    public DistanceSensor sensorDistance2 = null;
+//    public ColorSensor sensorColor = null;
+//    public DistanceSensor sensorDistance = null;
+//    public ColorSensor sensorColor2 = null;
+//    public DistanceSensor sensorDistance2 = null;
 
     public BHI260IMU imu;
     IMU.Parameters IMUParameters;
@@ -40,19 +40,19 @@ public class Robot {
     public void init(HardwareMap ahwmap){
         hwMap = ahwmap;
 
-        //Get color sensor 1
-        sensorColor = hwMap.get(ColorSensor.class, "color");
-        sensorDistance = hwMap.get(DistanceSensor.class, "color");
-
-        //Get color sensor 2
-        sensorColor2 = hwMap.get(ColorSensor.class, "color2");
-        sensorDistance2 = hwMap.get(DistanceSensor.class, "color2");
+//        //Get color sensor 1
+//        sensorColor = hwMap.get(ColorSensor.class, "color");
+//        sensorDistance = hwMap.get(DistanceSensor.class, "color");
+//
+//        //Get color sensor 2
+//        sensorColor2 = hwMap.get(ColorSensor.class, "color2");
+//        sensorDistance2 = hwMap.get(DistanceSensor.class, "color2");
 
         //  Get all drive motors
-        motorFrontLeft = hwMap.get(DcMotor.class, "motorFrontLeft");
-        motorBackLeft = hwMap.get(DcMotor.class, "motorBackLeft");
-        motorFrontRight = hwMap.get(DcMotor.class, "motorFrontRight");
-        motorBackRight = hwMap.get(DcMotor.class, "motorBackRight");
+        motorFrontLeft = hwMap.get(DcMotor.class, "frontLeft");
+        motorBackLeft = hwMap.get(DcMotor.class, "backLeft");
+        motorFrontRight = hwMap.get(DcMotor.class, "frontRight");
+        motorBackRight = hwMap.get(DcMotor.class, "backRight");
 
         // Left side drive motors are forward
         motorFrontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -75,25 +75,25 @@ public class Robot {
         motorFrontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motorBackRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        //Get arm motors
-        armRightMotor = hwMap.get(DcMotor.class, "armRight");
-        armLeftMotor = hwMap.get(DcMotor.class, "armLeft");
-
-        //Set arm motors to work in tandem
-//        armRightMotor.setDirection(DcMotor.Direction.FORWARD);
-//        armLeftMotor.setDirection(DcMotor.Direction.REVERSE);
-
-        //Set arm run without encoder
-        armRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        armLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-        //Set arm motors brake mode
-        armRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        armLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        //Get arm motors
+//        armRightMotor = hwMap.get(DcMotor.class, "armRight");
+//        armLeftMotor = hwMap.get(DcMotor.class, "armLeft");
+//
+//        //Set arm motors to work in tandem
+////        armRightMotor.setDirection(DcMotor.Direction.FORWARD);
+////        armLeftMotor.setDirection(DcMotor.Direction.REVERSE);
+//
+//        //Set arm run without encoder
+//        armRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        armLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//
+//        //Set arm motors brake mode
+//        armRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        armLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         //Get claw servos
-        leftFinger = hwMap.get(Servo.class, "left_finger");
-        rightFinger = hwMap.get(Servo.class, "right_finger");
+        leftFinger = hwMap.get(Servo.class, "finger0");
+        rightFinger = hwMap.get(Servo.class, "finger1");
 
         //Set claw left finger to work in tandem w/ right finger
         leftFinger.setDirection(Servo.Direction.REVERSE);

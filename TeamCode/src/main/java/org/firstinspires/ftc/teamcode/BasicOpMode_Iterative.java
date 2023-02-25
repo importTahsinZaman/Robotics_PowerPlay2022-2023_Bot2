@@ -58,7 +58,7 @@ import java.util.Locale;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Basic: Iterative OpMode", group="Iterative Opmode")
+//@TeleOp(name="Basic: Iterative OpMode", group="Iterative Opmode")
 public class BasicOpMode_Iterative extends OpMode
 {
     private Robot robot = new Robot();
@@ -74,8 +74,8 @@ public class BasicOpMode_Iterative extends OpMode
 
     private double dPadMovementSpeed = 0.1;
 
-    int blueReading = 0;
-    int redReading = 0;
+//    int blueReading = 0;
+//    int redReading = 0;
 
     @Override
     public void init() {
@@ -90,25 +90,30 @@ public class BasicOpMode_Iterative extends OpMode
         telemetry.update();
     }
 
-    public void raiseArm(double power){
-        if(robot.armRightMotor.getCurrentPosition()>=155){
-            robot.armRightMotor.setPower(0.3);
-            robot.armLeftMotor.setPower(-0.3);
-        }else{
-            robot.armRightMotor.setPower(power);
-            robot.armLeftMotor.setPower(-power);
-        }
-    }
-
-    public void dropArm(){
-        robot.armRightMotor.setPower(-0.5);
-        robot.armLeftMotor.setPower(0.5);
-    }
-
-    public void restArm(){
-        robot.armRightMotor.setPower(0);
-        robot.armLeftMotor.setPower(0);
-    }
+//    public void raiseArm(double power){
+//        if(robot.armRightMotor.getCurrentPosition()>=155){
+//            robot.armRightMotor.setPower(0.3);
+//            robot.armLeftMotor.setPower(-0.3);
+//        }
+//        else if(robot.armRightMotor.getCurrentPosition()>=185){
+//            robot.armRightMotor.setPower(0.65);
+//            robot.armLeftMotor.setPower(-0.65);
+//        }
+//        else{
+//            robot.armRightMotor.setPower(power);
+//            robot.armLeftMotor.setPower(-power);
+//        }
+//    }
+//
+//    public void dropArm(){
+//        robot.armRightMotor.setPower(-0.5);
+//        robot.armLeftMotor.setPower(0.5);
+//    }
+//
+//    public void restArm(){
+//        robot.armRightMotor.setPower(0);
+//        robot.armLeftMotor.setPower(0);
+//    }
 
     public void openClaw(){
         robot.leftFinger.setPosition(0.162);
@@ -146,29 +151,29 @@ public class BasicOpMode_Iterative extends OpMode
         double speedMultiplier = 0.4;
 
 
-        Color.RGBToHSV((int)(robot.sensorColor.red() * SCALE_FACTOR),
-                    (int) (robot.sensorColor.green() * SCALE_FACTOR),
-                    (int) (robot.sensorColor.blue() * SCALE_FACTOR),
-                    hsvValues);
+//        Color.RGBToHSV((int)(robot.sensorColor.red() * SCALE_FACTOR),
+//                    (int) (robot.sensorColor.green() * SCALE_FACTOR),
+//                    (int) (robot.sensorColor.blue() * SCALE_FACTOR),
+//                    hsvValues);
+//
+//        if (gamepad1.b || (robot.sensorDistance.getDistance(DistanceUnit.CM) < 0.639)&& (robot.sensorColor.red() > robot.sensorColor.blue())
+//                && (robot.sensorColor.green() > robot.sensorColor.blue()) && (robot.sensorColor.green() > robot.sensorColor.red())){
+//            clawOpenTime = runtime.time();
+//            openClaw();
+//
+//        }else if (gamepad1.x || (robot.sensorDistance2.getDistance(DistanceUnit.CM) < 5.07 && runtime.time() >= clawOpenTime + .75 &&
+//                 gamepad1.right_trigger>0)){
+//            clawDetected = true;
+//            closeClaw();
+//        }
 
-        if (gamepad1.b || (robot.sensorDistance.getDistance(DistanceUnit.CM) < 0.639)&& (robot.sensorColor.red() > robot.sensorColor.blue())
-                && (robot.sensorColor.green() > robot.sensorColor.blue()) && (robot.sensorColor.green() > robot.sensorColor.red())){
-            clawOpenTime = runtime.time();
-            openClaw();
-
-        }else if (gamepad1.x || (robot.sensorDistance2.getDistance(DistanceUnit.CM) < 5.07 && runtime.time() >= clawOpenTime + .75 &&
-                 gamepad1.right_trigger>0)){
-            clawDetected = true;
-            closeClaw();
-        }
-
-        if(gamepad1.y){
-            raiseArm(1);
-        }else if (gamepad1.a){
-            dropArm();
-        }else{
-            restArm();
-        }
+//        if(gamepad1.y){
+//            raiseArm(1);
+//        }else if (gamepad1.a){
+//            dropArm();
+//        }else{
+//            restArm();
+//        }
 
 //        if(gamepad1.dpad_left){
 //            gyro.turnToPID(initialAngle+90);
@@ -218,8 +223,8 @@ public class BasicOpMode_Iterative extends OpMode
             robot.setAllDrivePower(0);
         }
 
-        blueReading = robot.sensorColor2.blue();
-        redReading = robot.sensorColor2.red();
+//        blueReading = robot.sensorColor2.blue();
+//        redReading = robot.sensorColor2.red();
 
         //Movement code ends here
 
@@ -227,16 +232,16 @@ public class BasicOpMode_Iterative extends OpMode
         telemetry.addData("y: ", robot.imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).secondAngle);
         telemetry.addData("z: ", robot.imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle);
         telemetry.addData("Arm Pos: ",robot.armRightMotor.getCurrentPosition());
-        telemetry.addData("Distance(cm): ", String.format(Locale.US, "%.02f", robot.sensorDistance.getDistance(DistanceUnit.CM)));
-        telemetry.addData("Alpha: ", robot.sensorColor.alpha());
-        telemetry.addData("Red: ", robot.sensorColor.red());
-        telemetry.addData("Green: ", robot.sensorColor.green());
-        telemetry.addData("Blue: ", robot.sensorColor.blue());
+//        telemetry.addData("Distance(cm): ", String.format(Locale.US, "%.02f", robot.sensorDistance.getDistance(DistanceUnit.CM)));
+//        telemetry.addData("Alpha: ", robot.sensorColor.alpha());
+//        telemetry.addData("Red: ", robot.sensorColor.red());
+//        telemetry.addData("Green: ", robot.sensorColor.green());
+//        telemetry.addData("Blue: ", robot.sensorColor.blue());
         telemetry.addData("Hue: ", hsvValues[0]);
-        telemetry.addData("Distance(cm) Sensor 2: ", String.format(Locale.US, "%.02f", robot.sensorDistance2.getDistance(DistanceUnit.CM)));
-        telemetry.addData("Red2: ", robot.sensorColor2.red());
-        telemetry.addData("Green2: ", robot.sensorColor2.green());
-        telemetry.addData("Blue2: ", robot.sensorColor2.blue());
+//        telemetry.addData("Distance(cm) Sensor 2: ", String.format(Locale.US, "%.02f", robot.sensorDistance2.getDistance(DistanceUnit.CM)));
+//        telemetry.addData("Red2: ", robot.sensorColor2.red());
+//        telemetry.addData("Green2: ", robot.sensorColor2.green());
+//        telemetry.addData("Blue2: ", robot.sensorColor2.blue());
         telemetry.addData("RunTime:", runtime.time());
         telemetry.update();
     }

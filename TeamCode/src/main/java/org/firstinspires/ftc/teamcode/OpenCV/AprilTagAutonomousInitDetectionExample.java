@@ -25,9 +25,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.teamcode.Gyro;
 import org.firstinspires.ftc.teamcode.Robot;
 import org.openftc.apriltag.AprilTagDetection;
@@ -41,9 +38,6 @@ import java.util.ArrayList;
 @Autonomous
 public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
 {
-    private final Robot robot = new Robot();
-    private Gyro gyro;
-    private double initialAngle = 0;
     OpenCvCamera camera;
     AprilTagDetectionPipeline aprilTagDetectionPipeline;
 
@@ -71,10 +65,6 @@ public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
     @Override
     public void runOpMode()
     {
-        robot.init(hardwareMap);
-        gyro  = new Gyro(robot);
-        gyro.resetAngle();
-        initialAngle = robot.imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
         aprilTagDetectionPipeline = new AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy);
@@ -211,42 +201,10 @@ public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
     }
 
     void zone1(){
-        robot.setDrivePower(-.5, .5,  .5, -.5);
-        sleep(520);
-        robot.setAllDrivePower(0);
-        gyro.turnToPID(initialAngle);
-        robot.setDrivePower(-.5, .5,  .5, -.5);
-        sleep(520);
-        robot.setAllDrivePower(0);
-        gyro.turnToPID(initialAngle);
-        robot.setDrivePower(-.5, .5,  .5, -.5);
-        sleep(520);
-        robot.setAllDrivePower(0);
-        gyro.turnToPID(initialAngle);
-        zone2();
     }
     void zone2(){
-        robot.setAllDrivePower(0.5);
-        sleep(495);
-        robot.setAllDrivePower(0);
-        gyro.turnToPID(initialAngle);
-        robot.setAllDrivePower(0.5);
-        sleep(495);
-        robot.setAllDrivePower(0);
     }
     void zone3(){
-        robot.setDrivePower(.5, -.5,  -.5, .5);
-        sleep(490);
-        robot.setAllDrivePower(0);
-        gyro.turnToPID(initialAngle);
-        robot.setDrivePower(.5, -.5,  -.5, .5);
-        sleep(490);
-        robot.setAllDrivePower(0);
-        gyro.turnToPID(initialAngle);
-        robot.setDrivePower(.5, -.5,  -.5, .5);
-        sleep(490);
-        robot.setAllDrivePower(0);
-        gyro.turnToPID(initialAngle);
-        zone2();
+
     }
 }
