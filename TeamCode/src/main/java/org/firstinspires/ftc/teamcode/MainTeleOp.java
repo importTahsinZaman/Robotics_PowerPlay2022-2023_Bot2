@@ -16,7 +16,7 @@ public class MainTeleOp extends LinearOpMode {
     private Motor fL, fR, bL, bR;
     private MecanumDrive m_drive;
     private GamepadEx driverController1;
-    private GamepadEx driverController2; 
+    private GamepadEx driverController2;
 
     private Motor lLift, rLift;
     private MotorGroup lift;
@@ -33,10 +33,10 @@ public class MainTeleOp extends LinearOpMode {
         bL = new Motor(hardwareMap, "bL"); //port 2
         bR = new Motor(hardwareMap, "bR"); //port 3
 
-//        fL.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
-//        fR.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
-//        bL.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
-//        bR.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        fL.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        fR.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        bL.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        bR.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
 
         m_drive = new MecanumDrive(fL, fR, bL, bR);
 
@@ -50,7 +50,7 @@ public class MainTeleOp extends LinearOpMode {
 
         lift = new MotorGroup(lLift, rLift);
 
-        lift.setRunMode(Motor.RunMode.RawPower);
+        lift.setRunMode(Motor.RunMode.VelocityControl);
 //        lift.setPositionCoefficient(0.3);
 //        lift.setPositionTolerance(30);
 
@@ -67,13 +67,13 @@ public class MainTeleOp extends LinearOpMode {
 //            lift.setTargetPosition(liftPosition);
 //            lift.set(0.7);
 
-//            if (driverController1.getButton(GamepadKeys.Button.Y)){
-//                lift.set(1);
-//            }else if (driverController1.getButton(GamepadKeys.Button.A)){
-//                lift.set(-1);
-//            }else{
-//                lift.set(0);
-//            }
+            if (driverController1.getButton(GamepadKeys.Button.Y)){
+                lift.set(1);
+            }else if (driverController1.getButton(GamepadKeys.Button.A)){
+                lift.set(-1);
+            }else{
+                lift.set(0);
+            }
 
             //4268
             //7450
