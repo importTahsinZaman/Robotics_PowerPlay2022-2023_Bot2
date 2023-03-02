@@ -50,9 +50,9 @@ public class MainTeleOp extends LinearOpMode {
 
         lift = new MotorGroup(lLift, rLift);
 
-        lift.setRunMode(Motor.RunMode.VelocityControl);
-//        lift.setPositionCoefficient(0.3);
-//        lift.setPositionTolerance(30);
+        lift.setRunMode(Motor.RunMode.PositionControl);
+        lift.setPositionCoefficient(0.3);
+        lift.setPositionTolerance(30);
 
 //        liftPosition = lLift.getCurrentPosition();
 
