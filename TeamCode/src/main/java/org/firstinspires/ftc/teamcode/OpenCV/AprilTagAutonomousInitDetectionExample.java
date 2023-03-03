@@ -21,12 +21,14 @@
 
 package org.firstinspires.ftc.teamcode.OpenCV;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.Gyro;
-import org.firstinspires.ftc.teamcode.Robot;
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -62,9 +64,13 @@ public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
 
     AprilTagDetection tagOfInterest = null;
 
+    SampleMecanumDrive drive;
+
     @Override
     public void runOpMode()
     {
+        drive = new SampleMecanumDrive(hardwareMap);
+
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
         aprilTagDetectionPipeline = new AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy);
@@ -168,6 +174,8 @@ public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
             telemetry.update();
         }
 
+
+
         /* Actually do something useful */
         if (tagOfInterest == null || tagOfInterest.id == ZONE_1){
             zone1();
@@ -201,10 +209,23 @@ public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
     }
 
     void zone1(){
+        Trajectory ParkZone1 = drive.trajectoryBuilder(new Pose2d())
+                .strafeRight(30)
+                .forward(20)
+                .build();
+        drive.followTrajectory(ParkZone1);
     }
     void zone2(){
+        Trajectory ParkZone2 = drive.trajectoryBuilder(new Pose2d())
+                .strafeRight(30)
+                .build();
+        drive.followTrajectory(ParkZone2);
     }
     void zone3(){
-
+        Trajectory ParkZone3 = drive.trajectoryBuilder(new Pose2d())
+                .strafeRight(30)
+                .back(20)
+                .build();
+        drive.followTrajectory(ParkZone3);
     }
 }

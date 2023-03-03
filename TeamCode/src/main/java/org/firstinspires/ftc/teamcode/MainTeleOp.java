@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import static com.arcrobotics.ftclib.gamepad.GamepadEx.*;
 
+import com.arcrobotics.ftclib.controller.PIDFController;
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
@@ -9,6 +10,9 @@ import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorGroup;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.Servo;
+
+import java.util.Arrays;
 
 @TeleOp(name="MainOpMode")
 public class MainTeleOp extends LinearOpMode {
@@ -22,6 +26,13 @@ public class MainTeleOp extends LinearOpMode {
     private MotorGroup lift;
 
     private int liftPosition;
+
+    private int topLiftPosition = 4500;
+    private int bottomLiftPosition = 15;
+
+    int[] LIFTPOSITIONS = new int[]{ 300, 800, 1300 }; //MUST BE LEAST TO GREATEST
+
+    private Servo leftServo, rightServo;
 
     @Override
     public void runOpMode() throws InterruptedException{
@@ -48,38 +59,70 @@ public class MainTeleOp extends LinearOpMode {
 
         rLift.setInverted(true);
 
+        rLift.resetEncoder();
+        lLift.resetEncoder();
+
         lift = new MotorGroup(lLift, rLift);
 
-        lift.setRunMode(Motor.RunMode.PositionControl);
-        lift.setPositionCoefficient(0.3);
-        lift.setPositionTolerance(30);
+        PIDFController pidf = new PIDFController(0.02, 0,0,0.6);
 
-//        liftPosition = lLift.getCurrentPosition();
+        lift.setRunMode(Motor.RunMode.VelocityControl);
+        lift.setVeloCoefficients(0.01, 0.5, 0.001);
+        lift.setFeedforwardCoefficients(0.92, 0.47);
+
+        liftPosition = lLift.getCurrentPosition();
+
+        Arrays.sort(LIFTPOSITIONS);
+
+        leftServo = hardwareMap.get(Servo.class, "leftServo");
+        rightServo = hardwareMap.get(Servo.class, "rightServo");
 
         waitForStart();
         while(opModeIsActive()){
-//            if(driverController1.getButton(GamepadKeys.Button.Y)){
-//                liftPosition += 10;
-//            }else if (driverController1.getButton(GamepadKeys.Button.A)){
-//                liftPosition -= 10;
-//            }
-//
-//            lift.setTargetPosition(liftPosition);
-//            lift.set(0.7);
-
-            if (driverController1.getButton(GamepadKeys.Button.Y)){
-                lift.set(1);
-            }else if (driverController1.getButton(GamepadKeys.Button.A)){
-                lift.set(-1);
-            }else{
-                lift.set(0);
+            if (driverController2.getButton(GamepadKeys.Button.RIGHT_BUMPER)){
+                    liftPosition += 30;
+            }else if (driverController2.getButton(GamepadKeys.Button.LEFT_BUMPER)){
+                    liftPosition -= 30;
+            } else if(driverController2.getButton(GamepadKeys.Button.Y)){
+                if (liftPosition < LIFTPOSITIONS[2] && liftPosition > LIFTPOSITIONS[1]){
+                    liftPosition = LIFTPOSITIONS[2];
+                }else if (liftPosition < LIFTPOSITIONS[1] && liftPosition > LIFTPOSITIONS[0]){
+                    liftPosition = LIFTPOSITIONS[1];
+                }else {
+                    liftPosition = LIFTPOSITIONS[0];
+                }
+            }else if(driverController2.getButton(GamepadKeys.Button.A)){
+                if (liftPosition > LIFTPOSITIONS[0] && liftPosition < LIFTPOSITIONS[1]){
+                    liftPosition = LIFTPOSITIONS[0];
+                }else if (liftPosition > LIFTPOSITIONS[1] && liftPosition < LIFTPOSITIONS[2]){
+                    liftPosition = LIFTPOSITIONS[1];
+                }else {
+                    liftPosition = LIFTPOSITIONS[2];
+                }
             }
+
+            if (liftPosition > topLiftPosition){
+                liftPosition = topLiftPosition;
+            }else if (liftPosition < bottomLiftPosition){
+                liftPosition = bottomLiftPosition;
+            }
+
+
+            double output = pidf.calculate(
+                        lLift.getCurrentPosition(), liftPosition
+            );
+            lift.set(output);
 
             //4268
             //7450
 
+            telemetry.addData("Desired SetPoint", liftPosition);
+
             telemetry.addData("Position Left:", lLift.getCurrentPosition());
             telemetry.addData("Position Right:", rLift.getCurrentPosition());
+
+            telemetry.addData("leftServo Position:", leftServo.getPosition());
+            telemetry.addData("rightServo Position", rightServo.getPosition());
 
             telemetry.update();
 
