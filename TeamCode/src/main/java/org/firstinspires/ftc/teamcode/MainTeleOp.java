@@ -64,11 +64,9 @@ public class MainTeleOp extends LinearOpMode {
 
         lift = new MotorGroup(lLift, rLift);
 
-        PIDFController pidf = new PIDFController(0.02, 0,0,0.6);
-
-        lift.setRunMode(Motor.RunMode.VelocityControl);
-        lift.setVeloCoefficients(0.01, 0.5, 0.001);
-        lift.setFeedforwardCoefficients(0.92, 0.47);
+        lift.setRunMode(Motor.RunMode.PositionControl);
+        lift.setPositionCoefficient(0.009);
+        lift.setPositionTolerance(35);
 
         liftPosition = lLift.getCurrentPosition();
 
@@ -79,11 +77,8 @@ public class MainTeleOp extends LinearOpMode {
 
         waitForStart();
         while(opModeIsActive()){
-            if (driverController2.getButton(GamepadKeys.Button.RIGHT_BUMPER)){
-                    liftPosition += 30;
-            }else if (driverController2.getButton(GamepadKeys.Button.LEFT_BUMPER)){
-                    liftPosition -= 30;
-            } else if(driverController2.getButton(GamepadKeys.Button.Y)){
+
+             if(driverController2.getButton(GamepadKeys.Button.Y)){
                 if (liftPosition < LIFTPOSITIONS[2] && liftPosition > LIFTPOSITIONS[1]){
                     liftPosition = LIFTPOSITIONS[2];
                 }else if (liftPosition < LIFTPOSITIONS[1] && liftPosition > LIFTPOSITIONS[0]){
@@ -99,7 +94,10 @@ public class MainTeleOp extends LinearOpMode {
                 }else {
                     liftPosition = LIFTPOSITIONS[2];
                 }
-            }
+            }else{
+                 liftPosition += gamepad2.right_trigger * 30;
+                 liftPosition -= gamepad2.left_trigger * 30;
+             }
 
             if (liftPosition > topLiftPosition){
                 liftPosition = topLiftPosition;
@@ -107,16 +105,25 @@ public class MainTeleOp extends LinearOpMode {
                 liftPosition = bottomLiftPosition;
             }
 
+            lift.setTargetPosition(liftPosition);
 
-            double output = pidf.calculate(
-                        lLift.getCurrentPosition(), liftPosition
-            );
-            lift.set(output);
+
+            if(lift.atTargetPosition()){
+                lift.set(0);
+            }else{
+                lift.set(1);
+            }
+
+            if(gamepad2.x){
+                leftServo.setPosition(0);
+                rightServo.setPosition(0);
+            }else if(gamepad2.b){
+                leftServo.setPosition(50);
+                rightServo.setPosition(50);
+            }
 
             //4268
             //7450
-
-            telemetry.addData("Desired SetPoint", liftPosition);
 
             telemetry.addData("Position Left:", lLift.getCurrentPosition());
             telemetry.addData("Position Right:", rLift.getCurrentPosition());
