@@ -19,10 +19,9 @@
  * SOFTWARE.
  */
 
-package org.firstinspires.ftc.teamcode.OpenCV;
+package org.firstinspires.ftc.teamcode.Autonomous;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -33,7 +32,6 @@ import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
-import org.openftc.easyopencv.OpenCvInternalCamera;
 
 import java.util.ArrayList;
 
@@ -58,13 +56,16 @@ public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
     double tagsize = 0.166;
 
     //Tag IDs of sleeve
-    int ZONE_1 = 6;
-    int ZONE_2 = 7;
-    int ZONE_3 = 8;
+    int ZONE_1 = 3;
+    int ZONE_2 = 6;
+    int ZONE_3 = 9;
 
     AprilTagDetection tagOfInterest = null;
 
     SampleMecanumDrive drive;
+    //These are set up such that default is left blue:
+    boolean left, blue = true;
+    boolean right, red = false;
 
     @Override
     public void runOpMode()
@@ -99,6 +100,35 @@ public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
          */
         while (!isStarted() && !isStopRequested())
         {
+            telemetry.addLine("Press (X) for Blue or (B) for Red ");
+            telemetry.addLine("Press (Y) for Left or (A) for Right ");
+
+            if (gamepad1.x){
+                blue = true;
+                red = false;
+            }else if (gamepad1.b){
+                red = true;
+                blue = false;
+            }
+
+            if (gamepad1.y){
+                left = true;
+                right = false;
+            }else if (gamepad1.a){
+                right = true;
+                left = false;
+            }
+
+            if (blue && left){
+                telemetry.addLine("Robot is on Blue Left");
+            }else if (blue && right){
+                telemetry.addLine("Robot is on Blue Right");
+            }else if (red && left){
+                telemetry.addLine("Robot is on Red Left");
+            }else if (red & right){
+                telemetry.addLine("Robot is on Red Right");
+            }
+
             ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
 
             if(currentDetections.size() != 0)
@@ -211,6 +241,9 @@ public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
     Trajectory ScorePreloadedCone = drive.trajectoryBuilder(new Pose2d())
             .strafeRight(30)
             .forward(20)
+            .addDisplacementMarker(() -> {
+
+            })
             .build();
 
     void zone1(){

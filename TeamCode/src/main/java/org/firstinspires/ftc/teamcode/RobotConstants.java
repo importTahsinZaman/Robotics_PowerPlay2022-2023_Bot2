@@ -4,8 +4,8 @@ import com.acmerobotics.dashboard.config.Config;
 
 @Config
 public class RobotConstants {
-    public static final double POSITIONCOEFFICIENT = 0.009;
-    public static final int POSITIONTOLERANCE = 35;
+    public static final double LIFTPOSITIONCOEFFICIENT = 0.009;
+    public static final int LIFTPOSITIONTOLERANCE = 35;
 
     public static final int BOTTOMLIFTPOSITION = 15; //Not included in preset heights
     public static final int GROUNDJUNCTIONPOSITION = 50;

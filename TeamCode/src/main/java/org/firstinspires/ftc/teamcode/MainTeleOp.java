@@ -19,11 +19,11 @@ import static org.firstinspires.ftc.teamcode.RobotConstants.GROUNDJUNCTIONPOSITI
 import static org.firstinspires.ftc.teamcode.RobotConstants.LEFTSERVOCLOSEPOSITION;
 import static org.firstinspires.ftc.teamcode.RobotConstants.LEFTSERVOOPENPOSITION;
 import static org.firstinspires.ftc.teamcode.RobotConstants.LIFTMULTIPLIER;
+import static org.firstinspires.ftc.teamcode.RobotConstants.LIFTPOSITIONCOEFFICIENT;
+import static org.firstinspires.ftc.teamcode.RobotConstants.LIFTPOSITIONTOLERANCE;
 import static org.firstinspires.ftc.teamcode.RobotConstants.LOWJUNCTIONPOSITION;
 import static org.firstinspires.ftc.teamcode.RobotConstants.MIDJUNCTIONPOSITION;
 import static org.firstinspires.ftc.teamcode.RobotConstants.HIGHJUNCTIONPOSITION;
-import static org.firstinspires.ftc.teamcode.RobotConstants.POSITIONCOEFFICIENT;
-import static org.firstinspires.ftc.teamcode.RobotConstants.POSITIONTOLERANCE;
 import static org.firstinspires.ftc.teamcode.RobotConstants.RIGHTSERVOCLOSEPOSITION;
 import static org.firstinspires.ftc.teamcode.RobotConstants.RIGHTSERVOOPENPOSITION;
 import static org.firstinspires.ftc.teamcode.RobotConstants.TOPLIFTPOSITION;
@@ -76,8 +76,8 @@ public class MainTeleOp extends LinearOpMode {
         lift = new MotorGroup(lLift, rLift);
 
         lift.setRunMode(Motor.RunMode.PositionControl);
-        lift.setPositionCoefficient(POSITIONCOEFFICIENT);
-        lift.setPositionTolerance(POSITIONTOLERANCE);
+        lift.setPositionCoefficient(LIFTPOSITIONCOEFFICIENT);
+        lift.setPositionTolerance(LIFTPOSITIONTOLERANCE);
 
         liftPosition = lLift.getCurrentPosition();
 
