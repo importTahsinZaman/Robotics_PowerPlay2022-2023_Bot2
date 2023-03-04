@@ -21,10 +21,25 @@
 
 package org.firstinspires.ftc.teamcode.Autonomous;
 
+import static org.firstinspires.ftc.teamcode.AutonConstants.BLUE_LEFT_JUNCTION_POSITION;
+import static org.firstinspires.ftc.teamcode.AutonConstants.BLUE_LEFT_START_POSITION;
+import static org.firstinspires.ftc.teamcode.AutonConstants.BLUE_LEFT_ZONE1_POSITION;
+import static org.firstinspires.ftc.teamcode.AutonConstants.BLUE_RIGHT_JUNCTION_POSITION;
+import static org.firstinspires.ftc.teamcode.AutonConstants.BLUE_RIGHT_START_POSITION;
+import static org.firstinspires.ftc.teamcode.AutonConstants.BLUE_RIGHT_ZONE1_POSITION;
+import static org.firstinspires.ftc.teamcode.AutonConstants.RED_LEFT_JUNCTION_POSITION;
+import static org.firstinspires.ftc.teamcode.AutonConstants.RED_LEFT_START_POSITION;
+import static org.firstinspires.ftc.teamcode.AutonConstants.RED_LEFT_ZONE1_POSITION;
+import static org.firstinspires.ftc.teamcode.AutonConstants.RED_RIGHT_JUNCTION_POSITION;
+import static org.firstinspires.ftc.teamcode.AutonConstants.RED_RIGHT_START_POSITION;
+import static org.firstinspires.ftc.teamcode.AutonConstants.RED_RIGHT_ZONE1_POSITION;
+import static org.firstinspires.ftc.teamcode.AutonConstants.ZONE2_TO_ZONE1_DISTANCE;
+import static org.firstinspires.ftc.teamcode.AutonConstants.ZONE2_TO_ZONE3_DISTANCE;
 import static org.firstinspires.ftc.teamcode.RobotConstants.LIFT_POSITION_COEFFICIENT;
 import static org.firstinspires.ftc.teamcode.RobotConstants.LIFT_POSITION_TOLERANCE;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorGroup;
@@ -33,6 +48,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -238,14 +254,14 @@ public class Autonomous extends LinearOpMode
         }
 
 
-
-        /* Actually do something useful */
-        if (tagOfInterest == null || tagOfInterest.id == ZONE_1){
-            zone1();
-        }else if (tagOfInterest.id == ZONE_2){
-            zone2();
-        }else if (tagOfInterest.id == ZONE_3){
-            zone3();
+        if (blue && right){
+            blueRight();
+        }else if (red && left){
+            redLeft();
+        }else if (red && right){
+            redRight();
+        }else{
+            blueLeft();
         }
 
 
@@ -271,21 +287,100 @@ public class Autonomous extends LinearOpMode
         }
     }
 
-    Trajectory ScorePreloadedCone = drive.trajectoryBuilder(new Pose2d())
-            .strafeRight(30)
-            .forward(20)
-            .addDisplacementMarker(() -> {
+    void blueLeft(){
+        TrajectorySequence traj = drive.trajectorySequenceBuilder(BLUE_LEFT_START_POSITION)
+                .strafeTo(BLUE_LEFT_JUNCTION_POSITION)
+                .waitSeconds(.8)
+                .strafeTo(BLUE_LEFT_ZONE1_POSITION)
+                .waitSeconds(.8)
+                .build();
+        drive.followTrajectorySequence(traj);
 
-            })
-            .build();
+        Trajectory parkTraj = null;
 
-    void zone1(){
-        drive.followTrajectory(ScorePreloadedCone);
+        if(tagOfInterest.id == ZONE_1){
+            parkTraj = drive.trajectoryBuilder(new Pose2d())
+                    .back(ZONE2_TO_ZONE1_DISTANCE)
+                    .build();
+            drive.followTrajectory(parkTraj);
+        }else if (tagOfInterest.id == ZONE_3){
+            parkTraj = drive.trajectoryBuilder(new Pose2d())
+                    .forward(ZONE2_TO_ZONE3_DISTANCE)
+                    .build();
+            drive.followTrajectory(parkTraj);
+        }
     }
-    void zone2(){
-        drive.followTrajectory(ScorePreloadedCone);
+
+
+    void blueRight(){
+        TrajectorySequence traj = drive.trajectorySequenceBuilder(BLUE_RIGHT_START_POSITION)
+                .strafeTo(BLUE_RIGHT_JUNCTION_POSITION)
+                .waitSeconds(.8)
+                .strafeTo(BLUE_RIGHT_ZONE1_POSITION)
+                .waitSeconds(.8)
+                .build();
+        drive.followTrajectorySequence(traj);
+
+        Trajectory parkTraj = null;
+
+        if(tagOfInterest.id == ZONE_1){
+            parkTraj = drive.trajectoryBuilder(new Pose2d())
+                    .forward(ZONE2_TO_ZONE1_DISTANCE)
+                    .build();
+            drive.followTrajectory(parkTraj);
+        }else if (tagOfInterest.id == ZONE_3){
+            parkTraj = drive.trajectoryBuilder(new Pose2d())
+                    .back(ZONE2_TO_ZONE3_DISTANCE)
+                    .build();
+            drive.followTrajectory(parkTraj);
+        }
     }
-    void zone3(){
-        drive.followTrajectory(ScorePreloadedCone);
+
+    void redLeft(){
+        TrajectorySequence traj = drive.trajectorySequenceBuilder(RED_LEFT_START_POSITION)
+                .strafeTo(RED_LEFT_JUNCTION_POSITION)
+                .waitSeconds(.8)
+                .strafeTo(RED_LEFT_ZONE1_POSITION)
+                .waitSeconds(.8)
+                .build();
+        drive.followTrajectorySequence(traj);
+
+        Trajectory parkTraj = null;
+
+        if(tagOfInterest.id == ZONE_1){
+            parkTraj = drive.trajectoryBuilder(new Pose2d())
+                    .back(ZONE2_TO_ZONE1_DISTANCE)
+                    .build();
+            drive.followTrajectory(parkTraj);
+        }else if (tagOfInterest.id == ZONE_3){
+            parkTraj = drive.trajectoryBuilder(new Pose2d())
+                    .forward(ZONE2_TO_ZONE3_DISTANCE)
+                    .build();
+            drive.followTrajectory(parkTraj);
+        }
+    }
+
+    void redRight(){
+        TrajectorySequence traj = drive.trajectorySequenceBuilder(RED_RIGHT_START_POSITION)
+                .strafeTo(RED_RIGHT_JUNCTION_POSITION)
+                .waitSeconds(.8)
+                .strafeTo(RED_RIGHT_ZONE1_POSITION)
+                .waitSeconds(.8)
+                .build();
+        drive.followTrajectorySequence(traj);
+
+        Trajectory parkTraj = null;
+
+        if(tagOfInterest.id == ZONE_1){
+            parkTraj = drive.trajectoryBuilder(new Pose2d())
+                    .forward(ZONE2_TO_ZONE1_DISTANCE)
+                    .build();
+            drive.followTrajectory(parkTraj);
+        }else if (tagOfInterest.id == ZONE_3){
+            parkTraj = drive.trajectoryBuilder(new Pose2d())
+                    .back(ZONE2_TO_ZONE3_DISTANCE)
+                    .build();
+            drive.followTrajectory(parkTraj);
+        }
     }
 }
