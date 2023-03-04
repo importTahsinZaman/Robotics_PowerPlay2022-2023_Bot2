@@ -13,17 +13,17 @@ public class MeepMeepTesting {
         MeepMeep meepMeep = new MeepMeep(800);
         RoadRunnerBotEntity myBot = null;
 
-        boolean blue = true;
-        boolean red = false;
-        boolean left = true;
-        boolean right = false;
+        boolean blue = false;
+        boolean red = true;
+        boolean left = false;
+        boolean right = true;
 
         if (blue && right){
             myBot = blueRight(meepMeep);
         }else if (red && left){
-            redLeft(meepMeep);
+            myBot = redLeft(meepMeep);
         }else if (red && right){
-            redRight(meepMeep);
+            myBot = redRight(meepMeep);
         }else{
             myBot = blueLeft(meepMeep);
         }
