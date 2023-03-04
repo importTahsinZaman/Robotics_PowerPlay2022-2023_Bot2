@@ -14,6 +14,13 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import java.util.Arrays;
 
+import static org.firstinspires.ftc.teamcode.RobotConstants.BOTTOMLIFTPOSITION;
+import static org.firstinspires.ftc.teamcode.RobotConstants.GROUNDJUNCTIONPOSITION;
+import static org.firstinspires.ftc.teamcode.RobotConstants.LOWJUNCTIONPOSITION;
+import static org.firstinspires.ftc.teamcode.RobotConstants.MIDJUNCTIONPOSITION;
+import static org.firstinspires.ftc.teamcode.RobotConstants.HIGHJUNCTIONPOSITION;
+import static org.firstinspires.ftc.teamcode.RobotConstants.TOPLIFTPOSITION;
+
 @TeleOp(name="MainOpMode")
 public class MainTeleOp extends LinearOpMode {
 
@@ -26,14 +33,6 @@ public class MainTeleOp extends LinearOpMode {
     private MotorGroup lift;
 
     private int liftPosition;
-
-
-    private final int BOTTOMLIFTPOSITION = 15; //Not included in preset heights
-    private final int GROUNDJUNCTIONPOSITION = 30;
-    private final int LOWJUNCTIONPOSITION = 100;
-    private final int MIDJUNCTIONPOSITION = 300;
-    private final int HIGHJUNCTIONPOSITION = 4050;
-    private final int TOPLIFTPOSITION = 4100; //Not included in preset heights
 
     private final int[] LIFTPOSITIONS = new int[]{ GROUNDJUNCTIONPOSITION, LOWJUNCTIONPOSITION, MIDJUNCTIONPOSITION, HIGHJUNCTIONPOSITION }; //MUST BE LEAST TO GREATEST
 
@@ -137,9 +136,6 @@ public class MainTeleOp extends LinearOpMode {
                 leftServo.setPosition(.68);
                 rightServo.setPosition(.32);
             }
-
-            //4268
-            //7450
 
             telemetry.addData("Target Position:", liftPosition);
             telemetry.addData("Position Left:", lLift.getCurrentPosition());
