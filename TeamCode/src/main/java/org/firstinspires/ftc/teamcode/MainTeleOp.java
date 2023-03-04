@@ -27,10 +27,15 @@ public class MainTeleOp extends LinearOpMode {
 
     private int liftPosition;
 
-    private int topLiftPosition = 4022;
-    private int bottomLiftPosition = 15;
 
-    int[] LIFTPOSITIONS = new int[]{ 300, 800, 1780 }; //MUST BE LEAST TO GREATEST
+    private final int BOTTOMLIFTPOSITION = 15; //Not included in preset heights
+    private final int GROUNDJUNCTIONPOSITION = 30;
+    private final int LOWJUNCTIONPOSITION = 100;
+    private final int MIDJUNCTIONPOSITION = 300;
+    private final int HIGHJUNCTIONPOSITION = 4050;
+    private final int TOPLIFTPOSITION = 4100; //Not included in preset heights
+
+    private final int[] LIFTPOSITIONS = new int[]{ GROUNDJUNCTIONPOSITION, LOWJUNCTIONPOSITION, MIDJUNCTIONPOSITION, HIGHJUNCTIONPOSITION }; //MUST BE LEAST TO GREATEST
 
     private Servo leftServo, rightServo;
 
@@ -110,10 +115,10 @@ public class MainTeleOp extends LinearOpMode {
                  liftPosition -= gamepad2.left_trigger * 30;
              }
 
-            if (liftPosition > topLiftPosition){
-                liftPosition = topLiftPosition;
-            }else if (liftPosition < bottomLiftPosition){
-                liftPosition = bottomLiftPosition;
+            if (liftPosition > TOPLIFTPOSITION){
+                liftPosition = TOPLIFTPOSITION;
+            }else if (liftPosition <= BOTTOMLIFTPOSITION){
+                liftPosition = BOTTOMLIFTPOSITION;
             }
 
             lift.setTargetPosition(liftPosition);
