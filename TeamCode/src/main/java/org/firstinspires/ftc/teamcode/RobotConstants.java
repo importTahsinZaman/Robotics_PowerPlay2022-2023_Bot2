@@ -4,21 +4,21 @@ import com.acmerobotics.dashboard.config.Config;
 
 @Config
 public class RobotConstants {
-    public static final double LIFTPOSITIONCOEFFICIENT = 0.009;
-    public static final int LIFTPOSITIONTOLERANCE = 35;
+    public static  double LIFT_POSITION_COEFFICIENT = 0.009;
+    public static  int LIFT_POSITION_TOLERANCE = 35;
 
-    public static final int BOTTOMLIFTPOSITION = 15; //Not included in preset heights
-    public static final int GROUNDJUNCTIONPOSITION = 50;
-    public static final int LOWJUNCTIONPOSITION = 100;
-    public static final int MIDJUNCTIONPOSITION = 300;
-    public static final int HIGHJUNCTIONPOSITION = 4050;
-    public static final int TOPLIFTPOSITION = 4100; //Not included in preset heights
+    public static  int BOTTOM_LIFT_POSITION = 15; //Not included in preset heights
+    public static  int GROUND_JUNCTION_POSITION = 50;
+    public static  int LOW_JUNCTION_POSITION = 100;
+    public static  int MID_JUNCTION_POSITION = 300;
+    public static  int HIGH_JUNCTION_POSITION = 4050;
+    public static  int TOP_LIFT_POSITION = 4100; //Not included in preset heights
 
-    public static final double LEFTSERVOOPENPOSITION = .68;
-    public static final double LEFTSERVOCLOSEPOSITION = .47;
+    public static  double LEFT_SERVO_OPEN_POSITION = .68;
+    public static  double LEFT_SERVO_CLOSE_POSITION = .47;
 
-    public static final double RIGHTSERVOOPENPOSITION = .32;
-    public static final double RIGHTSERVOCLOSEPOSITION = .53;
+    public static  double RIGHT_SERVO_OPEN_POSITION = .32;
+    public static  double RIGHT_SERVO_CLOSE_POSITION = .53;
 
-    public static final int LIFTMULTIPLIER = 30; //The multiplier on gamepad trigger values for manual lift movement
+    public static  int LIFT_MULTIPLIER = 30; //The multiplier on gamepad trigger values for manual lift movement
 }

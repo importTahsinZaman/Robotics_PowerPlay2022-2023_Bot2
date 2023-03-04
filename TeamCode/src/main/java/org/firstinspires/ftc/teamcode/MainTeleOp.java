@@ -1,8 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import static com.arcrobotics.ftclib.gamepad.GamepadEx.*;
-
-import com.arcrobotics.ftclib.controller.PIDFController;
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
@@ -14,19 +11,19 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import java.util.Arrays;
 
-import static org.firstinspires.ftc.teamcode.RobotConstants.BOTTOMLIFTPOSITION;
-import static org.firstinspires.ftc.teamcode.RobotConstants.GROUNDJUNCTIONPOSITION;
-import static org.firstinspires.ftc.teamcode.RobotConstants.LEFTSERVOCLOSEPOSITION;
-import static org.firstinspires.ftc.teamcode.RobotConstants.LEFTSERVOOPENPOSITION;
-import static org.firstinspires.ftc.teamcode.RobotConstants.LIFTMULTIPLIER;
-import static org.firstinspires.ftc.teamcode.RobotConstants.LIFTPOSITIONCOEFFICIENT;
-import static org.firstinspires.ftc.teamcode.RobotConstants.LIFTPOSITIONTOLERANCE;
-import static org.firstinspires.ftc.teamcode.RobotConstants.LOWJUNCTIONPOSITION;
-import static org.firstinspires.ftc.teamcode.RobotConstants.MIDJUNCTIONPOSITION;
-import static org.firstinspires.ftc.teamcode.RobotConstants.HIGHJUNCTIONPOSITION;
-import static org.firstinspires.ftc.teamcode.RobotConstants.RIGHTSERVOCLOSEPOSITION;
-import static org.firstinspires.ftc.teamcode.RobotConstants.RIGHTSERVOOPENPOSITION;
-import static org.firstinspires.ftc.teamcode.RobotConstants.TOPLIFTPOSITION;
+import static org.firstinspires.ftc.teamcode.RobotConstants.BOTTOM_LIFT_POSITION;
+import static org.firstinspires.ftc.teamcode.RobotConstants.GROUND_JUNCTION_POSITION;
+import static org.firstinspires.ftc.teamcode.RobotConstants.LEFT_SERVO_CLOSE_POSITION;
+import static org.firstinspires.ftc.teamcode.RobotConstants.LEFT_SERVO_OPEN_POSITION;
+import static org.firstinspires.ftc.teamcode.RobotConstants.LIFT_MULTIPLIER;
+import static org.firstinspires.ftc.teamcode.RobotConstants.LIFT_POSITION_COEFFICIENT;
+import static org.firstinspires.ftc.teamcode.RobotConstants.LIFT_POSITION_TOLERANCE;
+import static org.firstinspires.ftc.teamcode.RobotConstants.LOW_JUNCTION_POSITION;
+import static org.firstinspires.ftc.teamcode.RobotConstants.MID_JUNCTION_POSITION;
+import static org.firstinspires.ftc.teamcode.RobotConstants.HIGH_JUNCTION_POSITION;
+import static org.firstinspires.ftc.teamcode.RobotConstants.RIGHT_SERVO_CLOSE_POSITION;
+import static org.firstinspires.ftc.teamcode.RobotConstants.RIGHT_SERVO_OPEN_POSITION;
+import static org.firstinspires.ftc.teamcode.RobotConstants.TOP_LIFT_POSITION;
 
 @TeleOp(name="MainOpMode")
 public class MainTeleOp extends LinearOpMode {
@@ -41,7 +38,7 @@ public class MainTeleOp extends LinearOpMode {
 
     private int liftPosition;
 
-    private final int[] LIFTPOSITIONS = new int[]{ GROUNDJUNCTIONPOSITION, LOWJUNCTIONPOSITION, MIDJUNCTIONPOSITION, HIGHJUNCTIONPOSITION }; //MUST BE LEAST TO GREATEST
+    private final int[] LIFTPOSITIONS = new int[]{GROUND_JUNCTION_POSITION, LOW_JUNCTION_POSITION, MID_JUNCTION_POSITION, HIGH_JUNCTION_POSITION}; //MUST BE LEAST TO GREATEST
 
     private Servo leftServo, rightServo;
 
@@ -76,8 +73,8 @@ public class MainTeleOp extends LinearOpMode {
         lift = new MotorGroup(lLift, rLift);
 
         lift.setRunMode(Motor.RunMode.PositionControl);
-        lift.setPositionCoefficient(LIFTPOSITIONCOEFFICIENT);
-        lift.setPositionTolerance(LIFTPOSITIONTOLERANCE);
+        lift.setPositionCoefficient(LIFT_POSITION_COEFFICIENT);
+        lift.setPositionTolerance(LIFT_POSITION_TOLERANCE);
 
         liftPosition = lLift.getCurrentPosition();
 
@@ -117,14 +114,14 @@ public class MainTeleOp extends LinearOpMode {
                      }
                  }
             }else{
-                 liftPosition += gamepad2.right_trigger * LIFTMULTIPLIER;
-                 liftPosition -= gamepad2.left_trigger * LIFTMULTIPLIER;
+                 liftPosition += gamepad2.right_trigger * LIFT_MULTIPLIER;
+                 liftPosition -= gamepad2.left_trigger * LIFT_MULTIPLIER;
              }
 
-            if (liftPosition > TOPLIFTPOSITION){
-                liftPosition = TOPLIFTPOSITION;
-            }else if (liftPosition <= BOTTOMLIFTPOSITION){
-                liftPosition = BOTTOMLIFTPOSITION;
+            if (liftPosition > TOP_LIFT_POSITION){
+                liftPosition = TOP_LIFT_POSITION;
+            }else if (liftPosition <= BOTTOM_LIFT_POSITION){
+                liftPosition = BOTTOM_LIFT_POSITION;
             }
 
             lift.setTargetPosition(liftPosition);
@@ -137,11 +134,11 @@ public class MainTeleOp extends LinearOpMode {
             }
 
             if(gamepad2.x){
-                leftServo.setPosition(LEFTSERVOCLOSEPOSITION);
-                rightServo.setPosition(RIGHTSERVOCLOSEPOSITION);
+                leftServo.setPosition(LEFT_SERVO_CLOSE_POSITION);
+                rightServo.setPosition(RIGHT_SERVO_CLOSE_POSITION);
             }else if(gamepad2.b){
-                leftServo.setPosition(LEFTSERVOOPENPOSITION);
-                rightServo.setPosition(RIGHTSERVOOPENPOSITION);
+                leftServo.setPosition(LEFT_SERVO_OPEN_POSITION);
+                rightServo.setPosition(RIGHT_SERVO_OPEN_POSITION);
             }
 
             telemetry.addData("Target Position:", liftPosition);

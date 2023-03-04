@@ -21,10 +21,15 @@
 
 package org.firstinspires.ftc.teamcode.Autonomous;
 
+import static org.firstinspires.ftc.teamcode.RobotConstants.LIFT_POSITION_COEFFICIENT;
+import static org.firstinspires.ftc.teamcode.RobotConstants.LIFT_POSITION_TOLERANCE;
+
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.arcrobotics.ftclib.hardware.motors.Motor;
+import com.arcrobotics.ftclib.hardware.motors.MotorGroup;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
@@ -35,8 +40,8 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 
 import java.util.ArrayList;
 
-@Autonomous
-public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous
+public class Autonomous extends LinearOpMode
 {
     OpenCvCamera camera;
     AprilTagDetectionPipeline aprilTagDetectionPipeline;
@@ -63,6 +68,11 @@ public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
     AprilTagDetection tagOfInterest = null;
 
     SampleMecanumDrive drive;
+    private Motor lLift, rLift;
+    private MotorGroup lift;
+    private Servo leftServo, rightServo;
+    private int liftPosition;
+
     //These are set up such that default is left blue:
     boolean left, blue = true;
     boolean right, red = false;
@@ -70,7 +80,30 @@ public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
     @Override
     public void runOpMode()
     {
+        //                  ROBOT SETUP
         drive = new SampleMecanumDrive(hardwareMap);
+
+        lLift = new Motor(hardwareMap, "lLift",Motor.GoBILDA.RPM_312);
+        rLift = new Motor(hardwareMap, "rLift", Motor.GoBILDA.RPM_312);
+
+        lLift.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        rLift.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+
+        rLift.setInverted(true);
+
+        rLift.resetEncoder();
+        lLift.resetEncoder();
+
+        lift = new MotorGroup(lLift, rLift);
+
+        lift.setRunMode(Motor.RunMode.PositionControl);
+        lift.setPositionCoefficient(LIFT_POSITION_COEFFICIENT);
+        lift.setPositionTolerance(LIFT_POSITION_TOLERANCE);
+
+        leftServo = hardwareMap.get(Servo.class, "leftServo");
+        rightServo = hardwareMap.get(Servo.class, "rightServo");
+
+        //              ROBOT SETUP ENDED
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
@@ -100,8 +133,8 @@ public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
          */
         while (!isStarted() && !isStopRequested())
         {
-            telemetry.addLine("Press (X) for Blue or (B) for Red ");
-            telemetry.addLine("Press (Y) for Left or (A) for Right ");
+            telemetry.addLine("Press (X) for Blue or (B) for Red");
+            telemetry.addLine("Press (Y) for Left or (A) for Right");
 
             if (gamepad1.x){
                 blue = true;
