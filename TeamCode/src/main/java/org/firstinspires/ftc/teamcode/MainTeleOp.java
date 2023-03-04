@@ -16,9 +16,16 @@ import java.util.Arrays;
 
 import static org.firstinspires.ftc.teamcode.RobotConstants.BOTTOMLIFTPOSITION;
 import static org.firstinspires.ftc.teamcode.RobotConstants.GROUNDJUNCTIONPOSITION;
+import static org.firstinspires.ftc.teamcode.RobotConstants.LEFTSERVOCLOSEPOSITION;
+import static org.firstinspires.ftc.teamcode.RobotConstants.LEFTSERVOOPENPOSITION;
+import static org.firstinspires.ftc.teamcode.RobotConstants.LIFTMULTIPLIER;
 import static org.firstinspires.ftc.teamcode.RobotConstants.LOWJUNCTIONPOSITION;
 import static org.firstinspires.ftc.teamcode.RobotConstants.MIDJUNCTIONPOSITION;
 import static org.firstinspires.ftc.teamcode.RobotConstants.HIGHJUNCTIONPOSITION;
+import static org.firstinspires.ftc.teamcode.RobotConstants.POSITIONCOEFFICIENT;
+import static org.firstinspires.ftc.teamcode.RobotConstants.POSITIONTOLERANCE;
+import static org.firstinspires.ftc.teamcode.RobotConstants.RIGHTSERVOCLOSEPOSITION;
+import static org.firstinspires.ftc.teamcode.RobotConstants.RIGHTSERVOOPENPOSITION;
 import static org.firstinspires.ftc.teamcode.RobotConstants.TOPLIFTPOSITION;
 
 @TeleOp(name="MainOpMode")
@@ -69,8 +76,8 @@ public class MainTeleOp extends LinearOpMode {
         lift = new MotorGroup(lLift, rLift);
 
         lift.setRunMode(Motor.RunMode.PositionControl);
-        lift.setPositionCoefficient(0.009);
-        lift.setPositionTolerance(35);
+        lift.setPositionCoefficient(POSITIONCOEFFICIENT);
+        lift.setPositionTolerance(POSITIONTOLERANCE);
 
         liftPosition = lLift.getCurrentPosition();
 
@@ -110,8 +117,8 @@ public class MainTeleOp extends LinearOpMode {
                      }
                  }
             }else{
-                 liftPosition += gamepad2.right_trigger * 30;
-                 liftPosition -= gamepad2.left_trigger * 30;
+                 liftPosition += gamepad2.right_trigger * LIFTMULTIPLIER;
+                 liftPosition -= gamepad2.left_trigger * LIFTMULTIPLIER;
              }
 
             if (liftPosition > TOPLIFTPOSITION){
@@ -130,11 +137,11 @@ public class MainTeleOp extends LinearOpMode {
             }
 
             if(gamepad2.x){
-                leftServo.setPosition(.47);
-                rightServo.setPosition(.53);
+                leftServo.setPosition(LEFTSERVOCLOSEPOSITION);
+                rightServo.setPosition(RIGHTSERVOCLOSEPOSITION);
             }else if(gamepad2.b){
-                leftServo.setPosition(.68);
-                rightServo.setPosition(.32);
+                leftServo.setPosition(LEFTSERVOOPENPOSITION);
+                rightServo.setPosition(RIGHTSERVOOPENPOSITION);
             }
 
             telemetry.addData("Target Position:", liftPosition);

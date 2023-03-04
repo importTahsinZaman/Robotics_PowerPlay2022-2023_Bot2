@@ -208,24 +208,18 @@ public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
         }
     }
 
+    Trajectory ScorePreloadedCone = drive.trajectoryBuilder(new Pose2d())
+            .strafeRight(30)
+            .forward(20)
+            .build();
+
     void zone1(){
-        Trajectory ParkZone1 = drive.trajectoryBuilder(new Pose2d())
-                .strafeRight(30)
-                .forward(20)
-                .build();
-        drive.followTrajectory(ParkZone1);
+        drive.followTrajectory(ScorePreloadedCone);
     }
     void zone2(){
-        Trajectory ParkZone2 = drive.trajectoryBuilder(new Pose2d())
-                .strafeRight(30)
-                .build();
-        drive.followTrajectory(ParkZone2);
+        drive.followTrajectory(ScorePreloadedCone);
     }
     void zone3(){
-        Trajectory ParkZone3 = drive.trajectoryBuilder(new Pose2d())
-                .strafeRight(30)
-                .back(20)
-                .build();
-        drive.followTrajectory(ParkZone3);
+        drive.followTrajectory(ScorePreloadedCone);
     }
 }
