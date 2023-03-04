@@ -21,6 +21,12 @@
 
 package org.firstinspires.ftc.teamcode.Autonomous;
 
+import static org.firstinspires.ftc.teamcode.AutonConstants.BLUE_LEFT_JUNCTION_POSITION;
+import static org.firstinspires.ftc.teamcode.AutonConstants.BLUE_LEFT_START_POSITION;
+import static org.firstinspires.ftc.teamcode.AutonConstants.BLUE_LEFT_ZONE1_POSITION;
+import static org.firstinspires.ftc.teamcode.AutonConstants.BLUE_RIGHT_JUNCTION_POSITION;
+import static org.firstinspires.ftc.teamcode.AutonConstants.BLUE_RIGHT_START_POSITION;
+import static org.firstinspires.ftc.teamcode.AutonConstants.BLUE_RIGHT_ZONE1_POSITION;
 import static org.firstinspires.ftc.teamcode.AutonConstants.RED_LEFT_JUNCTION_POSITION;
 import static org.firstinspires.ftc.teamcode.AutonConstants.RED_LEFT_START_POSITION;
 import static org.firstinspires.ftc.teamcode.AutonConstants.RED_LEFT_ZONE1_POSITION;
@@ -281,20 +287,53 @@ public class SafeAutonomous extends LinearOpMode
         }
     }
 
-    Trajectory ScorePreloadedCone = drive.trajectoryBuilder(new Pose2d())
-            .strafeRight(30)
-            .forward(20)
-            .addDisplacementMarker(() -> {
-
-            })
-            .build();
-
     void blueLeft(){
+        TrajectorySequence traj = drive.trajectorySequenceBuilder(BLUE_LEFT_START_POSITION)
+                .strafeTo(BLUE_LEFT_JUNCTION_POSITION)
+                .waitSeconds(.8)
+                .strafeTo(BLUE_LEFT_ZONE1_POSITION)
+                .waitSeconds(.8)
+                .build();
+        drive.followTrajectorySequence(traj);
 
+        Trajectory parkTraj = null;
+
+        if(tagOfInterest.id == ZONE_1){
+            parkTraj = drive.trajectoryBuilder(new Pose2d())
+                    .back(ZONE2_TO_ZONE1_DISTANCE)
+                    .build();
+            drive.followTrajectory(parkTraj);
+        }else if (tagOfInterest.id == ZONE_3){
+            parkTraj = drive.trajectoryBuilder(new Pose2d())
+                    .forward(ZONE2_TO_ZONE3_DISTANCE)
+                    .build();
+            drive.followTrajectory(parkTraj);
+        }
     }
 
-    void blueRight(){
 
+    void blueRight(){
+        TrajectorySequence traj = drive.trajectorySequenceBuilder(BLUE_RIGHT_START_POSITION)
+                .strafeTo(BLUE_RIGHT_JUNCTION_POSITION)
+                .waitSeconds(.8)
+                .strafeTo(BLUE_RIGHT_ZONE1_POSITION)
+                .waitSeconds(.8)
+                .build();
+        drive.followTrajectorySequence(traj);
+
+        Trajectory parkTraj = null;
+
+        if(tagOfInterest.id == ZONE_1){
+            parkTraj = drive.trajectoryBuilder(new Pose2d())
+                    .forward(ZONE2_TO_ZONE1_DISTANCE)
+                    .build();
+            drive.followTrajectory(parkTraj);
+        }else if (tagOfInterest.id == ZONE_3){
+            parkTraj = drive.trajectoryBuilder(new Pose2d())
+                    .back(ZONE2_TO_ZONE3_DISTANCE)
+                    .build();
+            drive.followTrajectory(parkTraj);
+        }
     }
 
     void redLeft(){
