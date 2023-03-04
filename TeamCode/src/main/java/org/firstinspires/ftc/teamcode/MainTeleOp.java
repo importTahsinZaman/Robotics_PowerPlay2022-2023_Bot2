@@ -27,10 +27,10 @@ public class MainTeleOp extends LinearOpMode {
 
     private int liftPosition;
 
-    private int topLiftPosition = 4500;
+    private int topLiftPosition = 4022;
     private int bottomLiftPosition = 15;
 
-    int[] LIFTPOSITIONS = new int[]{ 300, 800, 1300 }; //MUST BE LEAST TO GREATEST
+    int[] LIFTPOSITIONS = new int[]{ 300, 800, 1780 }; //MUST BE LEAST TO GREATEST
 
     private Servo leftServo, rightServo;
 
@@ -44,10 +44,10 @@ public class MainTeleOp extends LinearOpMode {
         bL = new Motor(hardwareMap, "bL"); //port 2
         bR = new Motor(hardwareMap, "bR"); //port 3
 
-        fL.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
-        fR.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
-        bL.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
-        bR.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        fL.setZeroPowerBehavior(Motor.ZeroPowerBehavior.FLOAT);
+        fR.setZeroPowerBehavior(Motor.ZeroPowerBehavior.FLOAT);
+        bL.setZeroPowerBehavior(Motor.ZeroPowerBehavior.FLOAT);
+        bR.setZeroPowerBehavior(Motor.ZeroPowerBehavior.FLOAT);
 
         m_drive = new MecanumDrive(fL, fR, bL, bR);
 
@@ -78,22 +78,33 @@ public class MainTeleOp extends LinearOpMode {
         waitForStart();
         while(opModeIsActive()){
 
-             if(driverController2.getButton(GamepadKeys.Button.Y)){
-                if (liftPosition < LIFTPOSITIONS[2] && liftPosition > LIFTPOSITIONS[1]){
-                    liftPosition = LIFTPOSITIONS[2];
-                }else if (liftPosition < LIFTPOSITIONS[1] && liftPosition > LIFTPOSITIONS[0]){
-                    liftPosition = LIFTPOSITIONS[1];
-                }else {
-                    liftPosition = LIFTPOSITIONS[0];
-                }
-            }else if(driverController2.getButton(GamepadKeys.Button.A)){
-                if (liftPosition > LIFTPOSITIONS[0] && liftPosition < LIFTPOSITIONS[1]){
-                    liftPosition = LIFTPOSITIONS[0];
-                }else if (liftPosition > LIFTPOSITIONS[1] && liftPosition < LIFTPOSITIONS[2]){
-                    liftPosition = LIFTPOSITIONS[1];
-                }else {
-                    liftPosition = LIFTPOSITIONS[2];
-                }
+             if(driverController2.getButton(GamepadKeys.Button.Y) || driverController2.getButton(GamepadKeys.Button.A)){
+                 int distance = Math.abs(LIFTPOSITIONS[0] - liftPosition);
+                 int idx = 0;
+                 for(int c = 1; c < LIFTPOSITIONS.length; c++){
+                     int cdistance = Math.abs(LIFTPOSITIONS[c] - liftPosition);
+                     if(cdistance < distance){
+                         idx = c;
+                         distance = cdistance;
+                     }
+                 }
+                 if (driverController2.getButton(GamepadKeys.Button.Y)) {
+                     if (idx == LIFTPOSITIONS.length -1){
+                         liftPosition = LIFTPOSITIONS[idx];
+                     }else if (LIFTPOSITIONS[idx] > liftPosition){
+                         liftPosition = LIFTPOSITIONS[idx];
+                     }else if (LIFTPOSITIONS[idx] < liftPosition){
+                         liftPosition = LIFTPOSITIONS[idx+1];
+                     }
+                 }else if(driverController2.getButton(GamepadKeys.Button.A)){
+                     if (idx == 0){
+                         liftPosition = LIFTPOSITIONS[0];
+                     }else if (LIFTPOSITIONS[idx] < liftPosition){
+                         liftPosition = LIFTPOSITIONS[idx];
+                     }else if (LIFTPOSITIONS[idx] > liftPosition){
+                         liftPosition = LIFTPOSITIONS[idx-1];
+                     }
+                 }
             }else{
                  liftPosition += gamepad2.right_trigger * 30;
                  liftPosition -= gamepad2.left_trigger * 30;
@@ -115,16 +126,17 @@ public class MainTeleOp extends LinearOpMode {
             }
 
             if(gamepad2.x){
-                leftServo.setPosition(0);
-                rightServo.setPosition(0);
+                leftServo.setPosition(.47);
+                rightServo.setPosition(.53);
             }else if(gamepad2.b){
-                leftServo.setPosition(50);
-                rightServo.setPosition(50);
+                leftServo.setPosition(.68);
+                rightServo.setPosition(.32);
             }
 
             //4268
             //7450
 
+            telemetry.addData("Target Position:", liftPosition);
             telemetry.addData("Position Left:", lLift.getCurrentPosition());
             telemetry.addData("Position Right:", rLift.getCurrentPosition());
 
