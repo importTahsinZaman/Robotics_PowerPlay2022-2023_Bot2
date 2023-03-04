@@ -23,16 +23,16 @@ package org.firstinspires.ftc.teamcode.Autonomous;
 
 import static org.firstinspires.ftc.teamcode.AutonConstants.BLUE_LEFT_JUNCTION_POSITION;
 import static org.firstinspires.ftc.teamcode.AutonConstants.BLUE_LEFT_START_POSITION;
-import static org.firstinspires.ftc.teamcode.AutonConstants.BLUE_LEFT_ZONE1_POSITION;
+import static org.firstinspires.ftc.teamcode.AutonConstants.BLUE_LEFT_ZONE2_POSITION;
 import static org.firstinspires.ftc.teamcode.AutonConstants.BLUE_RIGHT_JUNCTION_POSITION;
 import static org.firstinspires.ftc.teamcode.AutonConstants.BLUE_RIGHT_START_POSITION;
-import static org.firstinspires.ftc.teamcode.AutonConstants.BLUE_RIGHT_ZONE1_POSITION;
+import static org.firstinspires.ftc.teamcode.AutonConstants.BLUE_RIGHT_ZONE2_POSITION;
 import static org.firstinspires.ftc.teamcode.AutonConstants.RED_LEFT_JUNCTION_POSITION;
 import static org.firstinspires.ftc.teamcode.AutonConstants.RED_LEFT_START_POSITION;
-import static org.firstinspires.ftc.teamcode.AutonConstants.RED_LEFT_ZONE1_POSITION;
+import static org.firstinspires.ftc.teamcode.AutonConstants.RED_LEFT_ZONE2_POSITION;
 import static org.firstinspires.ftc.teamcode.AutonConstants.RED_RIGHT_JUNCTION_POSITION;
 import static org.firstinspires.ftc.teamcode.AutonConstants.RED_RIGHT_START_POSITION;
-import static org.firstinspires.ftc.teamcode.AutonConstants.RED_RIGHT_ZONE1_POSITION;
+import static org.firstinspires.ftc.teamcode.AutonConstants.RED_RIGHT_ZONE2_POSITION;
 import static org.firstinspires.ftc.teamcode.AutonConstants.WAIT_AT_JUNCTION_TIME;
 import static org.firstinspires.ftc.teamcode.AutonConstants.WAIT_AT_ZONE2_TIME;
 import static org.firstinspires.ftc.teamcode.AutonConstants.ZONE2_TO_ZONE1_DISTANCE;
@@ -314,7 +314,7 @@ public class SafeAutonomous extends LinearOpMode
         lift.setTargetPosition(BOTTOM_LIFT_POSITION);
 
         TrajectorySequence traj2 = drive.trajectorySequenceBuilder(traj.end())
-                .strafeTo(BLUE_LEFT_ZONE1_POSITION)
+                .strafeTo(BLUE_LEFT_ZONE2_POSITION)
                 .waitSeconds(WAIT_AT_ZONE2_TIME)
                 .build();
 
@@ -348,7 +348,7 @@ public class SafeAutonomous extends LinearOpMode
         lift.setTargetPosition(BOTTOM_LIFT_POSITION);
 
         TrajectorySequence traj2 = drive.trajectorySequenceBuilder(traj.end())
-                .strafeTo(BLUE_RIGHT_ZONE1_POSITION)
+                .strafeTo(BLUE_RIGHT_ZONE2_POSITION)
                 .waitSeconds(WAIT_AT_ZONE2_TIME)
                 .build();
 
@@ -381,7 +381,7 @@ public class SafeAutonomous extends LinearOpMode
         lift.setTargetPosition(BOTTOM_LIFT_POSITION);
 
         TrajectorySequence traj2 = drive.trajectorySequenceBuilder(traj.end())
-                .strafeTo(RED_LEFT_ZONE1_POSITION)
+                .strafeTo(RED_LEFT_ZONE2_POSITION)
                 .waitSeconds(WAIT_AT_ZONE2_TIME)
                 .build();
 
@@ -414,7 +414,7 @@ public class SafeAutonomous extends LinearOpMode
         lift.setTargetPosition(BOTTOM_LIFT_POSITION);
 
         TrajectorySequence traj2 = drive.trajectorySequenceBuilder(traj.end())
-                .strafeTo(RED_RIGHT_ZONE1_POSITION)
+                .strafeTo(RED_RIGHT_ZONE2_POSITION)
                 .waitSeconds(WAIT_AT_ZONE2_TIME)
                 .build();
         drive.followTrajectorySequence(traj2);
