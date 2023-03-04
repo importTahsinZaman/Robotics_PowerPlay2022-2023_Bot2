@@ -4,11 +4,11 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 
 public class AutonConstants {
-    public static int ZONE2_TO_ZONE1_DISTANCE = 25;
-    public static int ZONE2_TO_ZONE3_DISTANCE = 25;
+    public static int ZONE2_TO_ZONE1_DISTANCE = 25; //inches
+    public static int ZONE2_TO_ZONE3_DISTANCE = 25; //inches
 
-    public static double WAIT_AT_JUNCTION_TIME = 0.3;
-    public static double WAIT_AT_ZONE2_TIME = 0.3;
+    public static double WAIT_AT_JUNCTION_TIME = 0.3; //Seconds
+    public static double WAIT_AT_ZONE2_TIME = 0.3; //Seconds
 
     //Blue Left
     public static Pose2d BLUE_LEFT_START_POSITION = new Pose2d(36, -60, Math.toRadians(-180));

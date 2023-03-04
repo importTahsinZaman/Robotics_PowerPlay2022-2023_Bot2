@@ -37,6 +37,8 @@ import static org.firstinspires.ftc.teamcode.AutonConstants.WAIT_AT_JUNCTION_TIM
 import static org.firstinspires.ftc.teamcode.AutonConstants.WAIT_AT_ZONE2_TIME;
 import static org.firstinspires.ftc.teamcode.AutonConstants.ZONE2_TO_ZONE1_DISTANCE;
 import static org.firstinspires.ftc.teamcode.AutonConstants.ZONE2_TO_ZONE3_DISTANCE;
+import static org.firstinspires.ftc.teamcode.RobotConstants.BOTTOM_LIFT_POSITION;
+import static org.firstinspires.ftc.teamcode.RobotConstants.HIGH_JUNCTION_POSITION;
 import static org.firstinspires.ftc.teamcode.RobotConstants.LEFT_SERVO_CLOSE_POSITION;
 import static org.firstinspires.ftc.teamcode.RobotConstants.LEFT_SERVO_OPEN_POSITION;
 import static org.firstinspires.ftc.teamcode.RobotConstants.LIFT_POSITION_COEFFICIENT;
@@ -105,6 +107,11 @@ public class SafeAutonomous extends LinearOpMode
         //                  ROBOT SETUP
         drive = new SampleMecanumDrive(hardwareMap);
 
+        leftServo = hardwareMap.get(Servo.class, "leftServo");
+        rightServo = hardwareMap.get(Servo.class, "rightServo");
+
+        closeClaw();
+
         lLift = new Motor(hardwareMap, "lLift",Motor.GoBILDA.RPM_312);
         rLift = new Motor(hardwareMap, "rLift", Motor.GoBILDA.RPM_312);
 
@@ -122,10 +129,9 @@ public class SafeAutonomous extends LinearOpMode
         lift.setPositionCoefficient(LIFT_POSITION_COEFFICIENT);
         lift.setPositionTolerance(LIFT_POSITION_TOLERANCE);
 
-        leftServo = hardwareMap.get(Servo.class, "leftServo");
-        rightServo = hardwareMap.get(Servo.class, "rightServo");
+        lift.setTargetPosition(BOTTOM_LIFT_POSITION);
+        lift.set(1);
 
-        closeClaw();
         //              ROBOT SETUP ENDED
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -295,23 +301,32 @@ public class SafeAutonomous extends LinearOpMode
     }
 
     void blueLeft(){
+        lift.setTargetPosition(HIGH_JUNCTION_POSITION);
+
         TrajectorySequence traj = drive.trajectorySequenceBuilder(BLUE_LEFT_START_POSITION)
                 .strafeTo(BLUE_LEFT_JUNCTION_POSITION)
                 .waitSeconds(WAIT_AT_JUNCTION_TIME)
+                .build();
+
+        drive.followTrajectorySequence(traj);
+        while (!lift.atTargetPosition()){}
+        openClaw();
+        lift.setTargetPosition(BOTTOM_LIFT_POSITION);
+
+        TrajectorySequence traj2 = drive.trajectorySequenceBuilder(traj.end())
                 .strafeTo(BLUE_LEFT_ZONE1_POSITION)
                 .waitSeconds(WAIT_AT_ZONE2_TIME)
                 .build();
-        drive.followTrajectorySequence(traj);
 
-        Trajectory parkTraj = null;
+        drive.followTrajectorySequence(traj2);
 
         if(tagOfInterest.id == ZONE_1){
-            parkTraj = drive.trajectoryBuilder(new Pose2d())
+            Trajectory parkTraj = drive.trajectoryBuilder(new Pose2d())
                     .back(ZONE2_TO_ZONE1_DISTANCE)
                     .build();
             drive.followTrajectory(parkTraj);
         }else if (tagOfInterest.id == ZONE_3){
-            parkTraj = drive.trajectoryBuilder(new Pose2d())
+            Trajectory parkTraj = drive.trajectoryBuilder(new Pose2d())
                     .forward(ZONE2_TO_ZONE3_DISTANCE)
                     .build();
             drive.followTrajectory(parkTraj);
@@ -320,23 +335,32 @@ public class SafeAutonomous extends LinearOpMode
 
 
     void blueRight(){
+        lift.setTargetPosition(HIGH_JUNCTION_POSITION);
+
         TrajectorySequence traj = drive.trajectorySequenceBuilder(BLUE_RIGHT_START_POSITION)
                 .strafeTo(BLUE_RIGHT_JUNCTION_POSITION)
                 .waitSeconds(WAIT_AT_JUNCTION_TIME)
+                .build();
+
+        drive.followTrajectorySequence(traj);
+        while (!lift.atTargetPosition()){}
+        openClaw();
+        lift.setTargetPosition(BOTTOM_LIFT_POSITION);
+
+        TrajectorySequence traj2 = drive.trajectorySequenceBuilder(traj.end())
                 .strafeTo(BLUE_RIGHT_ZONE1_POSITION)
                 .waitSeconds(WAIT_AT_ZONE2_TIME)
                 .build();
-        drive.followTrajectorySequence(traj);
 
-        Trajectory parkTraj = null;
+        drive.followTrajectorySequence(traj2);
 
         if(tagOfInterest.id == ZONE_1){
-            parkTraj = drive.trajectoryBuilder(new Pose2d())
+            Trajectory parkTraj = drive.trajectoryBuilder(new Pose2d())
                     .forward(ZONE2_TO_ZONE1_DISTANCE)
                     .build();
             drive.followTrajectory(parkTraj);
         }else if (tagOfInterest.id == ZONE_3){
-            parkTraj = drive.trajectoryBuilder(new Pose2d())
+            Trajectory parkTraj = drive.trajectoryBuilder(new Pose2d())
                     .back(ZONE2_TO_ZONE3_DISTANCE)
                     .build();
             drive.followTrajectory(parkTraj);
@@ -344,23 +368,32 @@ public class SafeAutonomous extends LinearOpMode
     }
 
     void redLeft(){
+        lift.setTargetPosition(HIGH_JUNCTION_POSITION);
+
         TrajectorySequence traj = drive.trajectorySequenceBuilder(RED_LEFT_START_POSITION)
                 .strafeTo(RED_LEFT_JUNCTION_POSITION)
                 .waitSeconds(WAIT_AT_JUNCTION_TIME)
+                .build();
+
+        drive.followTrajectorySequence(traj);
+        while (!lift.atTargetPosition()){}
+        openClaw();
+        lift.setTargetPosition(BOTTOM_LIFT_POSITION);
+
+        TrajectorySequence traj2 = drive.trajectorySequenceBuilder(traj.end())
                 .strafeTo(RED_LEFT_ZONE1_POSITION)
                 .waitSeconds(WAIT_AT_ZONE2_TIME)
                 .build();
-        drive.followTrajectorySequence(traj);
 
-        Trajectory parkTraj = null;
+        drive.followTrajectorySequence(traj2);
 
         if(tagOfInterest.id == ZONE_1){
-            parkTraj = drive.trajectoryBuilder(new Pose2d())
+            Trajectory parkTraj = drive.trajectoryBuilder(new Pose2d())
                     .back(ZONE2_TO_ZONE1_DISTANCE)
                     .build();
             drive.followTrajectory(parkTraj);
         }else if (tagOfInterest.id == ZONE_3){
-            parkTraj = drive.trajectoryBuilder(new Pose2d())
+            Trajectory parkTraj = drive.trajectoryBuilder(new Pose2d())
                     .forward(ZONE2_TO_ZONE3_DISTANCE)
                     .build();
             drive.followTrajectory(parkTraj);
@@ -368,23 +401,31 @@ public class SafeAutonomous extends LinearOpMode
     }
 
     void redRight(){
+        lift.setTargetPosition(HIGH_JUNCTION_POSITION);
+
         TrajectorySequence traj = drive.trajectorySequenceBuilder(RED_RIGHT_START_POSITION)
                 .strafeTo(RED_RIGHT_JUNCTION_POSITION)
                 .waitSeconds(WAIT_AT_JUNCTION_TIME)
+                .build();
+
+        drive.followTrajectorySequence(traj);
+        while (!lift.atTargetPosition()){}
+        openClaw();
+        lift.setTargetPosition(BOTTOM_LIFT_POSITION);
+
+        TrajectorySequence traj2 = drive.trajectorySequenceBuilder(traj.end())
                 .strafeTo(RED_RIGHT_ZONE1_POSITION)
                 .waitSeconds(WAIT_AT_ZONE2_TIME)
                 .build();
-        drive.followTrajectorySequence(traj);
-
-        Trajectory parkTraj = null;
+        drive.followTrajectorySequence(traj2);
 
         if(tagOfInterest.id == ZONE_1){
-            parkTraj = drive.trajectoryBuilder(new Pose2d())
+            Trajectory parkTraj = drive.trajectoryBuilder(new Pose2d())
                     .forward(ZONE2_TO_ZONE1_DISTANCE)
                     .build();
             drive.followTrajectory(parkTraj);
         }else if (tagOfInterest.id == ZONE_3){
-            parkTraj = drive.trajectoryBuilder(new Pose2d())
+            Trajectory parkTraj = drive.trajectoryBuilder(new Pose2d())
                     .back(ZONE2_TO_ZONE3_DISTANCE)
                     .build();
             drive.followTrajectory(parkTraj);
