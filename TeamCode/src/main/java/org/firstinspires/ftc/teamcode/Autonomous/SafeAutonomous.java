@@ -33,6 +33,7 @@ import static org.firstinspires.ftc.teamcode.AutonConstants.RED_LEFT_ZONE2_POSIT
 import static org.firstinspires.ftc.teamcode.AutonConstants.RED_RIGHT_JUNCTION_POSITION;
 import static org.firstinspires.ftc.teamcode.AutonConstants.RED_RIGHT_START_POSITION;
 import static org.firstinspires.ftc.teamcode.AutonConstants.RED_RIGHT_ZONE2_POSITION;
+import static org.firstinspires.ftc.teamcode.AutonConstants.STRAFE_TO_ZONE2_DISTANCE;
 import static org.firstinspires.ftc.teamcode.AutonConstants.WAIT_AT_JUNCTION_TIME;
 import static org.firstinspires.ftc.teamcode.AutonConstants.WAIT_AT_ZONE2_TIME;
 import static org.firstinspires.ftc.teamcode.AutonConstants.ZONE2_TO_ZONE1_DISTANCE;
@@ -301,32 +302,19 @@ public class SafeAutonomous extends LinearOpMode
     }
 
     void blueLeft(){
-        lift.setTargetPosition(HIGH_JUNCTION_POSITION);
-
-        TrajectorySequence traj = drive.trajectorySequenceBuilder(BLUE_LEFT_START_POSITION)
-                .strafeTo(BLUE_LEFT_JUNCTION_POSITION)
-                .waitSeconds(WAIT_AT_JUNCTION_TIME)
-                .build();
-
-        drive.followTrajectorySequence(traj);
-        while (!lift.atTargetPosition()){}
-        openClaw();
-        lift.setTargetPosition(BOTTOM_LIFT_POSITION);
-
-        TrajectorySequence traj2 = drive.trajectorySequenceBuilder(traj.end())
-                .strafeTo(BLUE_LEFT_ZONE2_POSITION)
+        TrajectorySequence traj = drive.trajectorySequenceBuilder(new Pose2d(0, 0, 0))
+                .strafeLeft(STRAFE_TO_ZONE2_DISTANCE)
                 .waitSeconds(WAIT_AT_ZONE2_TIME)
                 .build();
-
-        drive.followTrajectorySequence(traj2);
+        drive.followTrajectorySequence(traj);
 
         if(tagOfInterest.id == ZONE_1){
-            Trajectory parkTraj = drive.trajectoryBuilder(new Pose2d())
+            Trajectory parkTraj = drive.trajectoryBuilder(traj.end())
                     .back(ZONE2_TO_ZONE1_DISTANCE)
                     .build();
             drive.followTrajectory(parkTraj);
         }else if (tagOfInterest.id == ZONE_3){
-            Trajectory parkTraj = drive.trajectoryBuilder(new Pose2d())
+            Trajectory parkTraj = drive.trajectoryBuilder(traj.end())
                     .forward(ZONE2_TO_ZONE3_DISTANCE)
                     .build();
             drive.followTrajectory(parkTraj);
@@ -335,32 +323,19 @@ public class SafeAutonomous extends LinearOpMode
 
 
     void blueRight(){
-        lift.setTargetPosition(HIGH_JUNCTION_POSITION);
-
-        TrajectorySequence traj = drive.trajectorySequenceBuilder(BLUE_RIGHT_START_POSITION)
-                .strafeTo(BLUE_RIGHT_JUNCTION_POSITION)
-                .waitSeconds(WAIT_AT_JUNCTION_TIME)
-                .build();
-
-        drive.followTrajectorySequence(traj);
-        while (!lift.atTargetPosition()){}
-        openClaw();
-        lift.setTargetPosition(BOTTOM_LIFT_POSITION);
-
-        TrajectorySequence traj2 = drive.trajectorySequenceBuilder(traj.end())
-                .strafeTo(BLUE_RIGHT_ZONE2_POSITION)
+        TrajectorySequence traj = drive.trajectorySequenceBuilder(new Pose2d(0, 0, 0))
+                .strafeRight(STRAFE_TO_ZONE2_DISTANCE)
                 .waitSeconds(WAIT_AT_ZONE2_TIME)
                 .build();
-
-        drive.followTrajectorySequence(traj2);
+        drive.followTrajectorySequence(traj);
 
         if(tagOfInterest.id == ZONE_1){
-            Trajectory parkTraj = drive.trajectoryBuilder(new Pose2d())
+            Trajectory parkTraj = drive.trajectoryBuilder(traj.end())
                     .forward(ZONE2_TO_ZONE1_DISTANCE)
                     .build();
             drive.followTrajectory(parkTraj);
         }else if (tagOfInterest.id == ZONE_3){
-            Trajectory parkTraj = drive.trajectoryBuilder(new Pose2d())
+            Trajectory parkTraj = drive.trajectoryBuilder(traj.end())
                     .back(ZONE2_TO_ZONE3_DISTANCE)
                     .build();
             drive.followTrajectory(parkTraj);
@@ -368,32 +343,19 @@ public class SafeAutonomous extends LinearOpMode
     }
 
     void redLeft(){
-        lift.setTargetPosition(HIGH_JUNCTION_POSITION);
-
-        TrajectorySequence traj = drive.trajectorySequenceBuilder(RED_LEFT_START_POSITION)
-                .strafeTo(RED_LEFT_JUNCTION_POSITION)
-                .waitSeconds(WAIT_AT_JUNCTION_TIME)
-                .build();
-
-        drive.followTrajectorySequence(traj);
-        while (!lift.atTargetPosition()){}
-        openClaw();
-        lift.setTargetPosition(BOTTOM_LIFT_POSITION);
-
-        TrajectorySequence traj2 = drive.trajectorySequenceBuilder(traj.end())
-                .strafeTo(RED_LEFT_ZONE2_POSITION)
+        TrajectorySequence traj = drive.trajectorySequenceBuilder(new Pose2d(0, 0, 0))
+                .strafeLeft(STRAFE_TO_ZONE2_DISTANCE)
                 .waitSeconds(WAIT_AT_ZONE2_TIME)
                 .build();
-
-        drive.followTrajectorySequence(traj2);
+        drive.followTrajectorySequence(traj);
 
         if(tagOfInterest.id == ZONE_1){
-            Trajectory parkTraj = drive.trajectoryBuilder(new Pose2d())
+            Trajectory parkTraj = drive.trajectoryBuilder(traj.end())
                     .back(ZONE2_TO_ZONE1_DISTANCE)
                     .build();
             drive.followTrajectory(parkTraj);
         }else if (tagOfInterest.id == ZONE_3){
-            Trajectory parkTraj = drive.trajectoryBuilder(new Pose2d())
+            Trajectory parkTraj = drive.trajectoryBuilder(traj.end())
                     .forward(ZONE2_TO_ZONE3_DISTANCE)
                     .build();
             drive.followTrajectory(parkTraj);
@@ -401,31 +363,19 @@ public class SafeAutonomous extends LinearOpMode
     }
 
     void redRight(){
-        lift.setTargetPosition(HIGH_JUNCTION_POSITION);
-
-        TrajectorySequence traj = drive.trajectorySequenceBuilder(RED_RIGHT_START_POSITION)
-                .strafeTo(RED_RIGHT_JUNCTION_POSITION)
-                .waitSeconds(WAIT_AT_JUNCTION_TIME)
-                .build();
-
-        drive.followTrajectorySequence(traj);
-        while (!lift.atTargetPosition()){}
-        openClaw();
-        lift.setTargetPosition(BOTTOM_LIFT_POSITION);
-
-        TrajectorySequence traj2 = drive.trajectorySequenceBuilder(traj.end())
-                .strafeTo(RED_RIGHT_ZONE2_POSITION)
+        TrajectorySequence traj = drive.trajectorySequenceBuilder(new Pose2d(0, 0, 0))
+                .strafeRight(STRAFE_TO_ZONE2_DISTANCE)
                 .waitSeconds(WAIT_AT_ZONE2_TIME)
                 .build();
-        drive.followTrajectorySequence(traj2);
+        drive.followTrajectorySequence(traj);
 
         if(tagOfInterest.id == ZONE_1){
-            Trajectory parkTraj = drive.trajectoryBuilder(new Pose2d())
+            Trajectory parkTraj = drive.trajectoryBuilder(traj.end())
                     .forward(ZONE2_TO_ZONE1_DISTANCE)
                     .build();
             drive.followTrajectory(parkTraj);
         }else if (tagOfInterest.id == ZONE_3){
-            Trajectory parkTraj = drive.trajectoryBuilder(new Pose2d())
+            Trajectory parkTraj = drive.trajectoryBuilder(traj.end())
                     .back(ZONE2_TO_ZONE3_DISTANCE)
                     .build();
             drive.followTrajectory(parkTraj);
