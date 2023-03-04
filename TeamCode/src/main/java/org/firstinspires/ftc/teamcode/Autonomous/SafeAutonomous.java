@@ -33,10 +33,16 @@ import static org.firstinspires.ftc.teamcode.AutonConstants.RED_LEFT_ZONE1_POSIT
 import static org.firstinspires.ftc.teamcode.AutonConstants.RED_RIGHT_JUNCTION_POSITION;
 import static org.firstinspires.ftc.teamcode.AutonConstants.RED_RIGHT_START_POSITION;
 import static org.firstinspires.ftc.teamcode.AutonConstants.RED_RIGHT_ZONE1_POSITION;
+import static org.firstinspires.ftc.teamcode.AutonConstants.WAIT_AT_JUNCTION_TIME;
+import static org.firstinspires.ftc.teamcode.AutonConstants.WAIT_AT_ZONE2_TIME;
 import static org.firstinspires.ftc.teamcode.AutonConstants.ZONE2_TO_ZONE1_DISTANCE;
 import static org.firstinspires.ftc.teamcode.AutonConstants.ZONE2_TO_ZONE3_DISTANCE;
+import static org.firstinspires.ftc.teamcode.RobotConstants.LEFT_SERVO_CLOSE_POSITION;
+import static org.firstinspires.ftc.teamcode.RobotConstants.LEFT_SERVO_OPEN_POSITION;
 import static org.firstinspires.ftc.teamcode.RobotConstants.LIFT_POSITION_COEFFICIENT;
 import static org.firstinspires.ftc.teamcode.RobotConstants.LIFT_POSITION_TOLERANCE;
+import static org.firstinspires.ftc.teamcode.RobotConstants.RIGHT_SERVO_CLOSE_POSITION;
+import static org.firstinspires.ftc.teamcode.RobotConstants.RIGHT_SERVO_OPEN_POSITION;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
@@ -119,6 +125,7 @@ public class SafeAutonomous extends LinearOpMode
         leftServo = hardwareMap.get(Servo.class, "leftServo");
         rightServo = hardwareMap.get(Servo.class, "rightServo");
 
+        closeClaw();
         //              ROBOT SETUP ENDED
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -290,9 +297,9 @@ public class SafeAutonomous extends LinearOpMode
     void blueLeft(){
         TrajectorySequence traj = drive.trajectorySequenceBuilder(BLUE_LEFT_START_POSITION)
                 .strafeTo(BLUE_LEFT_JUNCTION_POSITION)
-                .waitSeconds(.8)
+                .waitSeconds(WAIT_AT_JUNCTION_TIME)
                 .strafeTo(BLUE_LEFT_ZONE1_POSITION)
-                .waitSeconds(.8)
+                .waitSeconds(WAIT_AT_ZONE2_TIME)
                 .build();
         drive.followTrajectorySequence(traj);
 
@@ -315,9 +322,9 @@ public class SafeAutonomous extends LinearOpMode
     void blueRight(){
         TrajectorySequence traj = drive.trajectorySequenceBuilder(BLUE_RIGHT_START_POSITION)
                 .strafeTo(BLUE_RIGHT_JUNCTION_POSITION)
-                .waitSeconds(.8)
+                .waitSeconds(WAIT_AT_JUNCTION_TIME)
                 .strafeTo(BLUE_RIGHT_ZONE1_POSITION)
-                .waitSeconds(.8)
+                .waitSeconds(WAIT_AT_ZONE2_TIME)
                 .build();
         drive.followTrajectorySequence(traj);
 
@@ -339,9 +346,9 @@ public class SafeAutonomous extends LinearOpMode
     void redLeft(){
         TrajectorySequence traj = drive.trajectorySequenceBuilder(RED_LEFT_START_POSITION)
                 .strafeTo(RED_LEFT_JUNCTION_POSITION)
-                .waitSeconds(.8)
+                .waitSeconds(WAIT_AT_JUNCTION_TIME)
                 .strafeTo(RED_LEFT_ZONE1_POSITION)
-                .waitSeconds(.8)
+                .waitSeconds(WAIT_AT_ZONE2_TIME)
                 .build();
         drive.followTrajectorySequence(traj);
 
@@ -363,9 +370,9 @@ public class SafeAutonomous extends LinearOpMode
     void redRight(){
         TrajectorySequence traj = drive.trajectorySequenceBuilder(RED_RIGHT_START_POSITION)
                 .strafeTo(RED_RIGHT_JUNCTION_POSITION)
-                .waitSeconds(.8)
+                .waitSeconds(WAIT_AT_JUNCTION_TIME)
                 .strafeTo(RED_RIGHT_ZONE1_POSITION)
-                .waitSeconds(.8)
+                .waitSeconds(WAIT_AT_ZONE2_TIME)
                 .build();
         drive.followTrajectorySequence(traj);
 
@@ -382,5 +389,14 @@ public class SafeAutonomous extends LinearOpMode
                     .build();
             drive.followTrajectory(parkTraj);
         }
+    }
+
+    void closeClaw(){
+        leftServo.setPosition(LEFT_SERVO_CLOSE_POSITION);
+        rightServo.setPosition(RIGHT_SERVO_CLOSE_POSITION);
+    }
+    void openClaw(){
+        leftServo.setPosition(LEFT_SERVO_OPEN_POSITION);
+        rightServo.setPosition(RIGHT_SERVO_OPEN_POSITION);
     }
 }
